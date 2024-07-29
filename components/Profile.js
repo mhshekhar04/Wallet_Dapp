@@ -20,8 +20,8 @@ import Feather from 'react-native-vector-icons/Feather';
 import SecureStorage from 'rn-secure-storage';
 import CryptoJS from 'crypto-js';
 import Navigation from './Navigation';
+import config from '../config/config';
 
-const ENCRYPTION_KEY = 'your-encryption-key'; // Replace with your own encryption key
 
 const Profile = ({ navigation, route }) => {
   const { selectedAccount } = route.params;
@@ -71,7 +71,7 @@ const Profile = ({ navigation, route }) => {
       const encryptedPassword = await SecureStorage.getItem('newPassword');
       const storedPassword = CryptoJS.AES.decrypt(
         encryptedPassword,
-        ENCRYPTION_KEY
+        config.encryptionPassword
       ).toString(CryptoJS.enc.Utf8);
 
       if (storedPassword === password) {
@@ -80,14 +80,14 @@ const Profile = ({ navigation, route }) => {
           // For imported accounts, the private key is stored directly
           const privateKeyBytes = CryptoJS.AES.decrypt(
             selectedAccount.encryptedPrivateKey,
-            'your-secret-key'
+            config.privateKeyEncryptionString
           );
           decryptedPrivateKey = privateKeyBytes.toString(CryptoJS.enc.Utf8);
         } else {
           // For normal accounts, decrypt the private key
           const privateKeyBytes = CryptoJS.AES.decrypt(
             selectedAccount.encryptedPrivateKey,
-            'your-secret-key'
+            config.privateKeyEncryptionString
           );
           decryptedPrivateKey = privateKeyBytes.toString(CryptoJS.enc.Utf8);
         }

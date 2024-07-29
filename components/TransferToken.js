@@ -42,7 +42,7 @@ export default function TransferToken({ route, navigation }) {
   const adminWalletAddress = "0x41956fdADAe085BCABF9a1e085EE5c246Eb82b44";
 
   const decryptPrivateKey = (encryptedPrivateKey) => {
-    const bytes = CryptoJS.AES.decrypt(encryptedPrivateKey, 'your-secret-key');
+    const bytes = CryptoJS.AES.decrypt(encryptedPrivateKey, config.privateKeyEncryptionString);
     return bytes.toString(CryptoJS.enc.Utf8);
   };
 

@@ -21,7 +21,7 @@ export default function TransferNFT({ route, navigation }) {
   const [showSuccess, setShowSuccess] = useState(false);
   const tickOpacity = useState(new Animated.Value(0))[0];
   const decryptPrivateKey = (encryptedPrivateKey) => {
-    const bytes = CryptoJS.AES.decrypt(encryptedPrivateKey, 'your-secret-key');
+    const bytes = CryptoJS.AES.decrypt(encryptedPrivateKey, config.privateKeyEncryptionString);
     return bytes.toString(CryptoJS.enc.Utf8);
   };
   const handleNext = async () => {

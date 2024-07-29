@@ -18,6 +18,30 @@ const NoteDownSeed = ({ navigation }) => {
     generateSeedPhrase();
   }, []);
 
+  // const generateSeedPhrase = async () => {
+  //   try {
+  //     // Generate secure random bytes
+  //     const randomBytesArray = await new Promise((resolve, reject) => {
+  //       randomBytes(16, (err, bytes) => {
+  //         if (err) reject(err);
+  //         else resolve(bytes);
+  //       });
+  //     });
+
+  //     // Use ethers.js to generate mnemonic from random bytes
+  //     const mnemonic = ethers.Wallet.fromMnemonic(
+  //       ethers.utils.entropyToMnemonic(randomBytesArray),
+  //     ).mnemonic.phrase;
+
+  //     const newSeedPhrase = mnemonic.split(' ');
+  //     setSeedPhrase(newSeedPhrase);
+  //     console.log('Shadab Seed Phrase', newSeedPhrase);
+
+  //     setLoading(false); // Set loading to false once seed phrase is generated
+  //   } catch (error) {
+  //     console.error('Error generating seed phrase:', error);
+  //   }
+  // };
   const generateSeedPhrase = async () => {
     try {
       console.time('Generate Random Bytes');
@@ -28,6 +52,7 @@ const NoteDownSeed = ({ navigation }) => {
           else resolve(bytes);
         });
       });
+<<<<<<< Updated upstream
       console.timeEnd('Generate Random Bytes');
       console.log('Random Bytes:', randomBytesArray);
 
@@ -45,6 +70,16 @@ const NoteDownSeed = ({ navigation }) => {
       console.log('Seed Phrase:', newSeedPhrase);
 
       setSeedPhrase(newSeedPhrase);
+=======
+  
+      // Use ethers.js to generate mnemonic directly from random bytes
+      const mnemonic = ethers.utils.entropyToMnemonic(randomBytesArray);
+      const newSeedPhrase = mnemonic.split(' ');
+  
+      setSeedPhrase(newSeedPhrase);
+      console.log('Shadab Seed Phrase', newSeedPhrase);
+  
+>>>>>>> Stashed changes
       setLoading(false); // Set loading to false once seed phrase is generated
     } catch (error) {
       console.error('Error generating seed phrase:', error);
@@ -76,7 +111,7 @@ const NoteDownSeed = ({ navigation }) => {
             style={styles.loadingIndicator}
           />
           <Text style={{ color: 'white' }}>
-            This may take a few seconds. Do not press back
+            This may take few seconds. Do not press back
           </Text>
           <LottieView
             source={require('../assets/seed.json')}

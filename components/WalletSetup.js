@@ -45,57 +45,6 @@ export default function WalletSetup() {
       const checkCredentials = async () => {
         try {
           const password = await RNSecureStorage.getItem('newPassword');
-<<<<<<< Updated upstream
-          const seed = await RNSecureStorage.getItem('seedPhraseVerified');
-          
-          // Logging for debugging
-          console.log('Wallet Setup Password:', password);
-          console.log('Seed Phrase:', seed);
-          
-          if (password && seed) {
-            let fingerprint = null;
-            let pin = null;
-
-            try {
-              fingerprint = await RNSecureStorage.getItem('userFingerprint');
-            } catch (error) {
-              console.error('Error retrieving fingerprint:', error);
-            }
-
-            try {
-              pin = await RNSecureStorage.getItem('userPin');
-            } catch (error) {
-              console.error('Error retrieving pin:', error);
-            }
-
-            // Additional logging for debugging
-            console.log('Fingerprint:', fingerprint);
-            console.log('Pin:', pin);
-              
-            if (fingerprint || pin) {
-              console.log('Navigating to Lock screen');
-              navigation.replace('Lock');
-            } else {
-              console.log('Navigating to MainPage');
-              navigation.replace('MainPage');
-            }
-          } else {
-            console.log('Missing credentials');
-            // Optionally handle missing credentials, e.g., navigate to a setup screen
-          }
-        } catch (error) {
-          console.error('Error retrieving secure storage items:', error);
-          // Optionally handle errors, e.g., show an alert or navigate to an error screen
-        }
-      };
-  
-      checkCredentials();
-    }, [navigation])
-  );
-
-
-  
-=======
           console.log('Wallet Setup Password', password);
           const seed = await RNSecureStorage.getItem('seedPhraseVerified');
           console.log('Seed Phrase', seed);
@@ -133,7 +82,6 @@ export default function WalletSetup() {
       checkCredentials();
     }, [navigation])
   );
->>>>>>> Stashed changes
   const handleDeleteSeedPhrase = async () => {
     try {
       await RNSecureStorage.setItem('seedPhrase', null);

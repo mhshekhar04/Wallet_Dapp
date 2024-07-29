@@ -64,34 +64,13 @@ const App: React.FC = (): React.ReactElement | null => {
   useEffect(() => {
     const checkPassword = async () => {
       try {
-<<<<<<< Updated upstream
-        const password = await RNSecureStorage.getItem('Password');
-        const fingerprint = await RNSecureStorage.getItem('userFingerprint');
-        const pin = await RNSecureStorage.getItem('userPin');
-=======
         const password = await RNSecureStorage.getItem('newPassword');
->>>>>>> Stashed changes
         console.log('Password:', password); // Log password for debugging
         const seed = await RNSecureStorage.getItem('seedPhraseVerified');
         const fingerprint = await RNSecureStorage.getItem('userFingerprint');
         const pin = await RNSecureStorage.getItem('userPin');
 
-<<<<<<< Updated upstream
-        // if (password) {
-        //   if(pin ||fingerprint)
-        //      {
-        //        setInitialRoute('Lock')
-        //     }
-        //     else{
-        //       setInitialRoute('MainPage');
-        //     }
-         
-        // }
-        if(password)
-        {
-=======
         if (password && seed && fingerprint && pin) {
->>>>>>> Stashed changes
           setInitialRoute('MainPage');
         }
         else {

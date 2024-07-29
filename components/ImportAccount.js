@@ -12,13 +12,14 @@ import { ethers } from 'ethers';
 import CryptoJS from 'crypto-js';
 import { AccountsContext } from './AccountsContext';  // Import the context
 import Navigation from './Navigation';
+import config from '../config/config';
 const ImportAccount = ({ navigation,route }) => {
   const {selectedAccount} = route.params
   const [privateKey, setPrivateKey] = useState('');
   const [loading, setLoading] = useState(false);
   const { addAccount } = useContext(AccountsContext);  // Use the context
   const decryptPrivateKey = (encryptedPrivateKey) => {
-    const bytes = CryptoJS.AES.decrypt(encryptedPrivateKey, 'your-secret-key');
+    const bytes = CryptoJS.AES.decrypt(encryptedPrivateKey, config.privateKeyEncryptionString);
     return bytes.toString(CryptoJS.enc.Utf8);
   };
   const handleImport = async () => {
@@ -54,7 +55,7 @@ const ImportAccount = ({ navigation,route }) => {
         address: wallet.address,
         encryptedPrivateKey: CryptoJS.AES.encrypt(
           keyToUse,
-          'your-secret-key',
+          config.privateKeyEncryptionString,
         ).toString(),
         imported: true,
       };

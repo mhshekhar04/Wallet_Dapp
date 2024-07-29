@@ -14,6 +14,8 @@ import RNSecureStorage, { ACCESSIBLE } from 'rn-secure-storage';
 import CryptoJS from 'crypto-js';
 import TouchID from 'react-native-touch-id';
 import LottieView from 'lottie-react-native';
+import config from '../config/config';
+
 
 export default function SetupScreen() {
   const [newPassword, setNewPassword] = useState('');
@@ -27,16 +29,16 @@ export default function SetupScreen() {
   const [isFingerprintSetup, setIsFingerprintSetup] = useState(false);
   const navigation = useNavigation();
   
+  
   const pinRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
 
-  const ENCRYPTION_KEY = 'your-encryption-key'; // Replace with your own encryption key
 
   useEffect(() => {
     const getPassword = async () => {
       try {
         const encryptedPassword = await RNSecureStorage.getItem('newPassword');
         if (encryptedPassword) {
-          const decryptedPassword = CryptoJS.AES.decrypt(encryptedPassword, ENCRYPTION_KEY).toString(CryptoJS.enc.Utf8);
+          const decryptedPassword = CryptoJS.AES.decrypt(encryptedPassword, config.encryptionPassword).toString(CryptoJS.enc.Utf8);
           console.log("Decrypted Password:", decryptedPassword);
           setActiveStep('fingerprint');
         }
@@ -86,7 +88,7 @@ export default function SetupScreen() {
     }
 
     try {
-      const encryptedPassword = CryptoJS.AES.encrypt(newPassword, ENCRYPTION_KEY).toString();
+      const encryptedPassword = CryptoJS.AES.encrypt(newPassword, config.encryptionPassword).toString();
       await RNSecureStorage.setItem('newPassword', encryptedPassword, {
         accessible: ACCESSIBLE.WHEN_UNLOCKED,
       });
@@ -120,7 +122,7 @@ export default function SetupScreen() {
     }
 
     try {
-      const encryptedPin = CryptoJS.AES.encrypt(pinString, ENCRYPTION_KEY).toString();
+      const encryptedPin = CryptoJS.AES.encrypt(pinString, config.encryptionPassword).toString();
       await RNSecureStorage.setItem('userPin', encryptedPin, {
         accessible: ACCESSIBLE.WHEN_UNLOCKED,
       });

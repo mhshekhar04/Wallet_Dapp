@@ -14,7 +14,6 @@ import { ethers } from 'ethers';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import SecureStorage from 'rn-secure-storage';
-import RNSecureStorage from 'rn-secure-storage';
 import { AccountsContext } from './AccountsContext';
 import Navigation from './Navigation';
 import Svg, { Circle, Text as SvgText } from 'react-native-svg';

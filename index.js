@@ -2,6 +2,8 @@
  * @format
  */
 // import './shim';
+import './shim.js'
+// import crypto from 'crypto'
 import 'react-native-gesture-handler';
 import 'react-native-get-random-values';
 import {AppRegistry} from 'react-native';

@@ -10,6 +10,7 @@ import {
 import {ethers} from 'ethers';
 import SecureStorage from 'rn-secure-storage';
 import CryptoJS from 'crypto-js';
+import config from '../config/config';
 
 const ConfirmSeedPhrase = ({navigation, route}) => {
   const {seedPhrase} = route.params;
@@ -17,6 +18,8 @@ const ConfirmSeedPhrase = ({navigation, route}) => {
   const [inputPhrase, setInputPhrase] = useState(new Array(12).fill(''));
   const [activeStep, setActiveStep] = useState(1);
   const [randomPosition, setRandomPosition] = useState(generateRandomNumber());
+  // const [loading, setLoading] = useState(false); // Loader state
+
 
   // Function to generate a random number between 0 and 11 (inclusive)
   function generateRandomNumber() {
@@ -33,7 +36,7 @@ const ConfirmSeedPhrase = ({navigation, route}) => {
   // Function to handle navigation to next step
   const handleNext = async () => {
     // Check if the entered phrase matches the seed phrase at the current random position
-    if (inputPhrase[randomPosition] === seedPhrase[randomPosition]) {
+    if (inputPhrase[randomPosition] === seedPhrase[randomPosition].toLowerCase()) {
       // If correct, proceed to the next step or navigate to success page if all steps are completed
       if (activeStep === 3) {
         try {
@@ -51,7 +54,7 @@ const ConfirmSeedPhrase = ({navigation, route}) => {
                 address: childNode.address,
                 encryptedPrivateKey: CryptoJS.AES.encrypt(
                   childNode.privateKey,
-                  'your-secret-key'
+                  config.privateKeyEncryptionString
                 ).toString(),
               };
               newAccounts.push(newAccount);
@@ -111,6 +114,7 @@ const ConfirmSeedPhrase = ({navigation, route}) => {
           placeholder="Enter word"
           onChangeText={handleWordChange}
           editable={activeStep <= 3}
+          autoCapitalize="none"
           value={inputPhrase[randomPosition]}
         />
       </View>

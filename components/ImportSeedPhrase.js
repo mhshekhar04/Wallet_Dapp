@@ -14,6 +14,7 @@ import SecureStorage from 'rn-secure-storage';
 import CryptoJS from 'crypto-js';
 import debounce from 'lodash.debounce';
 import LottieView from 'lottie-react-native';
+import config from '../config/config';
 
 const ImportSeedPhrase = ({ navigation }) => {
   const [seedPhrase, setSeedPhrase] = useState(new Array(12).fill(''));
@@ -43,6 +44,65 @@ const ImportSeedPhrase = ({ navigation }) => {
     setSeedPhrase(newSeedPhrase);
   };
 
+  // const debouncedVerifySeedPhrase = useCallback(
+  //   debounce(async (mnemonic) => {
+  //     try {
+  //       const start1 = Date.now();
+  //       const isValid = ethers.utils.isValidMnemonic(mnemonic);
+  //       const end1 = Date.now();
+  //       console.log('Time taken for isValidMnemonic:', (end1 - start1) / 1000, 'seconds');
+
+  //       if (isValid) {
+  //         setIsVerified(true);
+
+  //         const start2 = Date.now();
+  //         const rootNode = ethers.utils.HDNode.fromMnemonic(mnemonic);
+  //         const end2 = Date.now();
+  //         console.log('Time taken for HDNode.fromMnemonic:', (end2 - start2) / 1000, 'seconds');
+
+  //         const start3 = Date.now();
+  //         const newAccounts = [];
+  //         for (let i = 0; i < 25; i++) {
+  //           const childNode = rootNode.derivePath(`m/44'/60'/0'/0/${i}`);
+  //           const newAccount = {
+  //             name: `Account ${accounts.length + i + 1}`,
+  //             address: childNode.address,
+  //             encryptedPrivateKey: CryptoJS.AES.encrypt(
+  //               childNode.privateKey,
+  //               'your-secret-key',
+  //             ).toString(),
+  //           };
+  //           newAccounts.push(newAccount);
+  //         }
+  //         const updatedAccounts = [...accounts, ...newAccounts];
+  //         setAccounts(updatedAccounts);
+  //         const end3 = Date.now();
+  //         console.log('Time taken for generating accounts:', (end3 - start3) / 1000, 'seconds');
+
+  //         const start4 = Date.now();
+  //         await SecureStorage.setItem('accounts', JSON.stringify(updatedAccounts));
+  //         await SecureStorage.setItem('seedPhraseVerified', 'true');
+  //         const end4 = Date.now();
+  //         console.log('Time taken for saving to SecureStorage:', (end4 - start4) / 1000, 'seconds');
+
+  //         setSelectedAccount(newAccounts[0]);
+  //         Alert.alert('Verification passed', 'Seed phrase is verified by ethers.js');
+  //         navigation.replace('VerifiedSeedPhrase');
+  //       } else {
+  //         setIsVerified(false);
+  //         Alert.alert('Verification Failed', 'Seed phrase not verified by ethers.js');
+  //       }
+  //     } catch (error) {
+  //       console.error('Error verifying seed phrase:', error);
+  //       setIsVerified(false);
+  //       Alert.alert('Verification Failed', 'An error occurred while verifying seed phrase');
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   }, 500),
+  //   [accounts, navigation]
+  // );
+
   const debouncedVerifySeedPhrase = useCallback(
     debounce(async (mnemonic) => {
       try {
@@ -50,40 +110,30 @@ const ImportSeedPhrase = ({ navigation }) => {
         const isValid = ethers.utils.isValidMnemonic(mnemonic);
         const end1 = Date.now();
         console.log('Time taken for isValidMnemonic:', (end1 - start1) / 1000, 'seconds');
-
+  
         if (isValid) {
           setIsVerified(true);
-
+  
           const start2 = Date.now();
           const rootNode = ethers.utils.HDNode.fromMnemonic(mnemonic);
           const end2 = Date.now();
           console.log('Time taken for HDNode.fromMnemonic:', (end2 - start2) / 1000, 'seconds');
-
+  
           const start3 = Date.now();
-          const newAccounts = [];
-          for (let i = 0; i < 25; i++) {
-            const childNode = rootNode.derivePath(`m/44'/60'/0'/0/${i}`);
-            const newAccount = {
-              name: `Account ${accounts.length + i + 1}`,
-              address: childNode.address,
-              encryptedPrivateKey: CryptoJS.AES.encrypt(
-                childNode.privateKey,
-                'your-secret-key',
-              ).toString(),
-            };
-            newAccounts.push(newAccount);
-          }
-          const updatedAccounts = [...accounts, ...newAccounts];
-          setAccounts(updatedAccounts);
+          const newAccounts = await generateAccounts(rootNode, accounts.length, 25);
           const end3 = Date.now();
           console.log('Time taken for generating accounts:', (end3 - start3) / 1000, 'seconds');
-
+  
           const start4 = Date.now();
-          await SecureStorage.setItem('accounts', JSON.stringify(updatedAccounts));
-          await SecureStorage.setItem('seedPhraseVerified', 'true');
+          const updatedAccounts = [...accounts, ...newAccounts];
+          await Promise.all([
+            SecureStorage.setItem('accounts', JSON.stringify(updatedAccounts)),
+            SecureStorage.setItem('seedPhraseVerified', 'true'),
+          ]);
           const end4 = Date.now();
           console.log('Time taken for saving to SecureStorage:', (end4 - start4) / 1000, 'seconds');
-
+  
+          setAccounts(updatedAccounts);
           setSelectedAccount(newAccounts[0]);
           Alert.alert('Verification passed', 'Seed phrase is verified by ethers.js');
           navigation.replace('VerifiedSeedPhrase');
@@ -101,7 +151,31 @@ const ImportSeedPhrase = ({ navigation }) => {
     }, 500),
     [accounts, navigation]
   );
-
+  
+  const generateAccounts = async (rootNode, startIdx, count) => {
+    const newAccounts = [];
+    const tasks = [];
+  
+    for (let i = 0; i < count; i++) {
+      tasks.push((async (index) => {
+        const childNode = rootNode.derivePath(`m/44'/60'/0'/0/${index}`);
+        const newAccount = {
+          name: `Account ${startIdx + index + 1}`,
+          address: childNode.address,
+          encryptedPrivateKey: CryptoJS.AES.encrypt(
+            childNode.privateKey,
+            config.privateKeyEncryptionString
+          ).toString(),
+        };
+        return newAccount;
+      })(i));
+    }
+  
+    const results = await Promise.all(tasks);
+    newAccounts.push(...results);
+  
+    return newAccounts;
+  };
   const verifySeedPhrase = async () => {
     setLoading(true);
     const mnemonic = seedPhrase.join(' ');

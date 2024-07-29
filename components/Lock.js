@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
+  Image,
   Modal,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -82,6 +83,9 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.container}>
+
+        <Image source={require('../assets/navigator_icon_grey.png')} style={styles.image} />
+    
       <Text style={styles.title}>Welcome Back</Text>
       <Text style={styles.subtitle}>Please enter your PIN to continue</Text>
       <View style={styles.pinContainer}>
@@ -118,12 +122,7 @@ export default function LoginScreen() {
         visible={isModalVisible}
         onRequestClose={() => setIsModalVisible(false)}
       >
-        <View style={styles.modalBackground}>
-          <View style={styles.modalContainer}>
-            <Text style={styles.modalTitle}>Authenticating...</Text>
-            <Text style={styles.modalText}>Please scan your fingerprint</Text>
-          </View>
-        </View>
+  
       </Modal>
     </View>
   );
@@ -136,7 +135,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#1E1E1E',
     padding: 20,
-  },
+   
+  }, 
   title: {
     fontSize: 32,
     fontWeight: 'bold',
@@ -224,4 +224,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 10,
   },
+  image: {
+    width: 270,
+    height: 270,
+
+  
+  }
 });

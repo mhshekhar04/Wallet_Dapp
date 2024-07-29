@@ -69,11 +69,25 @@ const App: React.FC = (): React.ReactElement | null => {
     const checkPassword = async () => {
       try {
         const password = await RNSecureStorage.getItem('Password');
+        const fingerprint = await RNSecureStorage.getItem('userFingerprint');
+        const pin = await RNSecureStorage.getItem('userPin');
         console.log('Password:', password); // Log password for debugging
 
-        if (password) {
+        // if (password) {
+        //   if(pin ||fingerprint)
+        //      {
+        //        setInitialRoute('Lock')
+        //     }
+        //     else{
+        //       setInitialRoute('MainPage');
+        //     }
+         
+        // }
+        if(password)
+        {
           setInitialRoute('MainPage');
-        } else {
+        }
+        else {
           let isFirstLaunch = await RNSecureStorage.getItem('isFirstLaunch');
           console.log('isFirstLaunch (before setting):', isFirstLaunch); // Log isFirstLaunch for debugging
 

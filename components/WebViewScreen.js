@@ -1,15 +1,101 @@
-import React from 'react';
-import {View, StyleSheet, ActivityIndicator} from 'react-native';
-import {WebView} from 'react-native-webview';
+import React, { useEffect, useRef } from 'react';
+import { View, StyleSheet, ActivityIndicator } from 'react-native';
+import { WebView } from 'react-native-webview';
+import CryptoJS from 'crypto-js';
+import { ethers } from 'ethers';
 
-export default function WebViewScreen({route}) {
-  const {url} = route.params;
+const decryptPrivateKey = (encryptedPrivateKey) => {
+  const bytes = CryptoJS.AES.decrypt(encryptedPrivateKey, 'your-secret-key');
+  return bytes.toString(CryptoJS.enc.Utf8);
+};
+
+const injectScript = (selectedAccount, privateKey, selectedNetwork) => {
+  return `
+    (function() {
+      console.log('Injected script executed');
+
+      const selectedAccount = "${selectedAccount}";
+      const privateKey = "${privateKey}";
+
+      window.ethereum = {
+        isMetaMask: true,
+        selectedAddress: selectedAccount,
+        enable: async () => {
+          console.log('enable called');
+          return [selectedAccount];
+        },
+        request: async ({ method, params }) => {
+          console.log('request called', method, params);
+          if (method === 'eth_requestAccounts' || method === 'eth_accounts') {
+            return [selectedAccount];
+          }
+          if (method === 'eth_chainId') {
+            return '${selectedNetwork.chainId}';
+          }
+          if (method === 'personal_sign') {
+            const wallet = new ethers.Wallet(privateKey);
+            const signature = await wallet.signMessage(ethers.utils.arrayify(params[0]));
+            console.log('personal_sign signature', signature);
+            return signature;
+          }
+          return [];
+        },
+        sendAsync: (request, callback) => {
+          console.log('sendAsync called', request);
+          if (request.method === 'eth_requestAccounts' || request.method === 'eth_accounts') {
+            callback(null, { result: [selectedAccount] });
+          } else if (request.method === 'eth_chainId') {
+            callback(null, { result: '${selectedNetwork.chainId}' });
+          } else if (request.method === 'personal_sign') {
+            const wallet = new ethers.Wallet(privateKey);
+            wallet.signMessage(ethers.utils.arrayify(request.params[0]))
+              .then(signature => {
+                console.log('sendAsync personal_sign signature', signature);
+                callback(null, { result: signature });
+              })
+              .catch(error => {
+                console.error('sendAsync personal_sign error', error);
+                callback(error, null);
+              });
+          } else {
+            callback(new Error('Unsupported method'), null);
+          }
+        }
+      };
+
+      console.log('window.ethereum injected', window.ethereum);
+
+      // Optional: For older dApps using web3
+      if (typeof window.web3 === 'undefined') {
+        window.web3 = new Web3(window.ethereum);
+        console.log('window.web3 injected', window.web3);
+      }
+    })();
+    true;
+  `;
+};
+
+export default function WebViewScreen({ route }) {
+  const { url, selectedAccount, selectedNetwork } = route.params;
+  const { address, encryptedPrivateKey } = selectedAccount;
+  const webViewRef = useRef(null);
+
+  const privateKey = decryptPrivateKey(encryptedPrivateKey);
+  const injectedJavaScript = injectScript(address, privateKey, selectedNetwork);
+
+  useEffect(() => {
+    console.log("WebViewScreen mounted");
+  }, []);
 
   return (
     <View style={styles.container}>
       <WebView
-        source={{uri: url}}
+        ref={webViewRef}
+        source={{ uri: url }}
         style={styles.webView}
+        injectedJavaScript={injectedJavaScript}
+        javaScriptEnabled={true}
+        domStorageEnabled={true}
         startInLoadingState={true}
         renderLoading={() => (
           <ActivityIndicator
@@ -18,6 +104,18 @@ export default function WebViewScreen({route}) {
             style={styles.loadingIndicator}
           />
         )}
+        onMessage={(event) => {
+          console.log('WebView message', event.nativeEvent.data);
+        }}
+        onError={(event) => {
+          console.error('WebView error', event.nativeEvent);
+        }}
+        onLoadStart={() => {
+          console.log('WebView loading started');
+        }}
+        onLoadEnd={() => {
+          console.log('WebView loading ended');
+        }}
       />
     </View>
   );
@@ -25,7 +123,7 @@ export default function WebViewScreen({route}) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '1C1C1C',
+    backgroundColor: '#1C1C1C',
     flex: 1,
   },
   webView: {
@@ -36,113 +134,3 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
-
-// import React, { useRef, useEffect } from 'react';
-// import { View, StyleSheet } from 'react-native';
-// import { WebView } from 'react-native-webview';
-// // import WalletConnect from '@walletconnect/client';
-// // import QRCodeModal from '@walletconnect/qrcode-modal';
-
-// export default function WebViewScreen({ navigation, route }) {
-//   const { url, selectedAccount } = route.params;
-//   const connector = useRef(null);
-
-//   useEffect(() => {
-//     async function setupWalletConnect() {
-//       try {
-//         connector.current = new WalletConnect({
-//           bridge: 'https://bridge.walletconnect.org', // Required
-//           qrcodeModal: QRCodeModal,
-//         });
-
-//         if (!connector.current.connected) {
-//           await connector.current.createSession();
-//         }
-
-//         connector.current.on('connect', (error, payload) => {
-//           if (error) {
-//             throw error;
-//           }
-//           const { accounts } = payload.params[0];
-//           console.log('Connected', accounts);
-//         });
-
-//         connector.current.on('session_update', (error, payload) => {
-//           if (error) {
-//             throw error;
-//           }
-//           const { accounts } = payload.params[0];
-//           console.log('Updated', accounts);
-//         });
-
-//         connector.current.on('disconnect', (error, payload) => {
-//           if (error) {
-//             throw error;
-//           }
-//           console.log('Disconnected');
-//         });
-//       } catch (error) {
-//         console.error('WalletConnect error:', error);
-//       }
-//     }
-
-//     setupWalletConnect();
-//   }, []);
-
-//   return (
-//     <View style={styles.container}>
-//       <WebView
-//         source={{ uri: url }}
-//         style={{ flex: 1 }}
-//         originWhitelist={['*']}
-//         javaScriptEnabled
-//         domStorageEnabled
-//         onMessage={event => {
-//           // Handle messages from the webview if needed
-//         }}
-//       />
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#1C1C1C',
-//   },
-// });
-
-
-
-
-
-
-
-
-
-// import React, { useEffect, useState } from 'react';
-// import { WebView } from 'react-native-webview';
-// import { useWeb3React } from '@web3-react/core';
-// import { View, ActivityIndicator } from 'react-native';
-
-// export default function WebViewScreen({ route }) {
-//   const { url } = route.params;
-//   const { account, library } = useWeb3React();
-//   const [loading, setLoading] = useState(true);
-
-//   useEffect(() => {
-//     if (account && library) {
-//       setLoading(false);
-//     }
-//   }, [account, library]);
-
-//   if (loading) {
-//     return (
-//       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-//         <ActivityIndicator size="large" color="#0000ff" />
-//       </View>
-//     );
-//   }
-
-//   return <WebView source={{ uri: url }} />;
-// }

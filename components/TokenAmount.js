@@ -8,13 +8,18 @@ import {
   Alert,
   ActivityIndicator,
   Animated,
+  Vibration
 } from 'react-native';
 import { ethers } from 'ethers';
 import CryptoJS from 'crypto-js';
 import LottieView from 'lottie-react-native'; // Import LottieView
+import Sound from 'react-native-sound';
 import loaderAnimation from '../assets/transaction_loader.json'; // Import your Lottie JSON file for loader
 import successAnimation from '../assets/payment.json'; // Import your Lottie JSON file for success
 import config from '../config/config';
+
+Sound.setCategory('Playback');
+
 export default function TokenAmount({ route, navigation }) {
   const { data, fromAccount, toAccount, selectedToken, selectedNetwork } = route.params;
   const [amount, setAmount] = useState('');
@@ -25,11 +30,12 @@ export default function TokenAmount({ route, navigation }) {
   const [showSuccess, setShowSuccess] = useState(false);
   const tickOpacity = useState(new Animated.Value(0))[0];
   const adminWalletAddress = '0x41956fdADAe085BCABF9a1e085EE5c246Eb82b44';
-  console.log("selectedNetwork ==== ", selectedNetwork);
+
   const decryptPrivateKey = (encryptedPrivateKey) => {
     const bytes = CryptoJS.AES.decrypt(encryptedPrivateKey, 'your-secret-key');
     return bytes.toString(CryptoJS.enc.Utf8);
   };
+
   useEffect(() => {
     const fetchBalanceData = async () => {
       try {
@@ -42,26 +48,26 @@ export default function TokenAmount({ route, navigation }) {
         const wallet = new ethers.Wallet(privateKey, provider);
         const balanceInWei = await wallet.getBalance();
         const balanceInEth = ethers.utils.formatEther(balanceInWei);
-        console.log('balanceInWei', balanceInWei);
-        console.log('balanceInEth', balanceInEth);
         setBalance(parseFloat(balanceInEth));
       } catch (error) {
-        Alert.alert('Error', 'Failed to fetch balance');
+        Alert.alert('Network isuues', 'Please try later');
         console.error('Error fetching balance:', error);
       }
     };
     fetchBalanceData();
   }, [data, fromAccount, selectedNetwork]);
+
   useEffect(() => {
     let gasFeeInterval;
     if (amount) {
       fetchGasFee();
-      gasFeeInterval = setInterval(fetchGasFee, 6000); // Fetch gas fee every 6 seconds
+      gasFeeInterval = setInterval(fetchGasFee, 5000); // Fetch gas fee every 5 seconds
     } else {
       setGasFee(null);
     }
     return () => clearInterval(gasFeeInterval); // Clear interval when component unmounts or amount changes
   }, [amount, selectedNetwork]);
+
   const fetchGasFee = async () => {
     setFetchingGasFee(true);
     try {
@@ -71,11 +77,13 @@ export default function TokenAmount({ route, navigation }) {
       const gasFees = gasPrice.mul(gasLimit);
       setGasFee(ethers.utils.formatEther(gasFees));
     } catch (error) {
-      Alert.alert('Error', 'Failed to fetch gas fee');
+
+      console.error('Error fetching gas fee:', error);
     } finally {
       setFetchingGasFee(false);
     }
   };
+
   const handleNext = async () => {
     const amountNum = parseFloat(amount);
     if (balance < amountNum) {
@@ -101,8 +109,6 @@ export default function TokenAmount({ route, navigation }) {
       // Calculate recipientAmount as 99.75% and adminAmount as 0.25%
       const recipientAmount = amountInWei.mul(9975).div(10000); // 99.75%
       const adminAmount = amountInWei.sub(recipientAmount); // 0.25%
-      console.log("Recipient Amount (in Wei):", recipientAmount.toString());
-      console.log("Admin Amount (in Wei):", adminAmount.toString());
       const tx1 = {
         to: toAccount.address,
         value: recipientAmount,
@@ -121,6 +127,8 @@ export default function TokenAmount({ route, navigation }) {
       await txResponse2.wait();
       // Show success animation
       setShowSuccess(true);
+      playNotificationSound();
+      Vibration.vibrate();
       Animated.timing(tickOpacity, {
         toValue: 1,
         duration: 2000,
@@ -138,6 +146,24 @@ export default function TokenAmount({ route, navigation }) {
       setLoading(false); // Stop loading
     }
   };
+
+  const playNotificationSound = () => {
+    const sound = new Sound(require('../assets/send_notification.mp3'), (error) => {
+      if (error) {
+        console.log('Failed to load the sound', error);
+        return;
+      }
+      sound.play((success) => {
+        if (!success) {
+          console.log('Sound playback failed');
+        }
+        sound.release();
+      });
+    });
+  };
+
+
+
   return (
     <View style={styles.container}>
       <Text style={styles.headerText}>Token Amount</Text>
@@ -149,13 +175,9 @@ export default function TokenAmount({ route, navigation }) {
         value={amount}
         keyboardType="numeric"
       />
-      {fetchingGasFee ? (
-        <ActivityIndicator size="small" color="#FEBF32" />
-      ) : (
-        <Text style={styles.gasFeeText}>
-        Gas Fee: {gasFee ? `${gasFee} ${selectedNetwork.suffix}` : 'N/A'}
-        </Text>
-      )}
+      <Text style={styles.gasFeeText}>
+        Gas Fee: {gasFee !== null ? `${gasFee} ${selectedNetwork.suffix}` : 'N/A'}
+      </Text>
       {loading ? (
         <LottieView // Use LottieView when loading
           source={loaderAnimation}
@@ -164,10 +186,13 @@ export default function TokenAmount({ route, navigation }) {
           style={styles.lottieAnimation}
         />
       ) : (
-        <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
-          <Text style={styles.nextButtonText}>Send</Text>
-        </TouchableOpacity>
+        !showSuccess && (
+          <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
+            <Text style={styles.nextButtonText}>Send</Text>
+          </TouchableOpacity>
+        )
       )}
+      <Text style={styles.balanceText}>Balance: {balance} {selectedNetwork.suffix}</Text>
       {showSuccess && (
         <LottieView
           source={successAnimation}
@@ -238,8 +263,8 @@ const styles = StyleSheet.create({
     lineHeight: 24,
   },
   lottieAnimation: {
-    width: 200,
-    height: 200,
+    width: 150,
+    height: 150,
   },
   successAnimation: {
     width: 100,
@@ -250,4 +275,3 @@ const styles = StyleSheet.create({
     transform: [{ translateX: -50 }, { translateY: -50 }],
   },
 });
-

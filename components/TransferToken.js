@@ -6,24 +6,28 @@ import {
   TextInput,
   StyleSheet,
   Alert,
-  ActivityIndicator,
   Animated,
+  Vibration
 } from 'react-native';
 import { ethers } from 'ethers';
 import CryptoJS from 'crypto-js';
 import LottieView from 'lottie-react-native';
+import Sound from 'react-native-sound';
 import loaderAnimation from '../assets/transaction_loader.json';
 import successAnimation from '../assets/payment.json';
 import config from '../config/config';
+
+Sound.setCategory('Playback');
+
 export default function TransferToken({ route, navigation }) {
   const { fromAccount, data, toAccount, tokenAddress, selectedNetwork } = route.params;
   const [amount, setAmount] = useState('');
   const [balance, setBalance] = useState('0.00');
   const [gasFee, setGasFee] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [fetchingGasFee, setFetchingGasFee] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const tickOpacity = useState(new Animated.Value(0))[0];
+
   const selectedToken = {
     tokenAddress,
     abi: [
@@ -34,16 +38,20 @@ export default function TransferToken({ route, navigation }) {
       'function transfer(address to, uint256 amount) returns (bool)'
     ]
   };
+
   const adminWalletAddress = "0x41956fdADAe085BCABF9a1e085EE5c246Eb82b44";
+
   const decryptPrivateKey = (encryptedPrivateKey) => {
     const bytes = CryptoJS.AES.decrypt(encryptedPrivateKey, 'your-secret-key');
     return bytes.toString(CryptoJS.enc.Utf8);
   };
-  console.log('fromAccount tt', fromAccount)
-  console.log('data tt', data)
-  console.log('toAccount tt', toAccount)
-  console.log('tokenAddress tt', tokenAddress)
-  console.log('selectedNetwork tt', selectedNetwork)
+
+  console.log('fromAccount tt', fromAccount);
+  console.log('data tt', data);
+  console.log('toAccount tt', toAccount);
+  console.log('tokenAddress tt', tokenAddress);
+  console.log('selectedNetwork tt', selectedNetwork);
+
   useEffect(() => {
     const fetchBalance = async () => {
       try {
@@ -60,26 +68,23 @@ export default function TransferToken({ route, navigation }) {
         const balanceInTokens = ethers.utils.formatUnits(balanceInWei, decimals);
         setBalance(parseFloat(balanceInTokens).toFixed(2));
       } catch (error) {
-        Alert.alert('Error', 'Failed to fetch balance');
+        Alert.alert('Network issues , Please try later');
         console.error('Error fetching balance:', error);
       }
     };
     fetchBalance();
   }, [fromAccount, data, selectedToken, selectedNetwork]);
 
-
   useEffect(() => {
     let gasFeeInterval;
-    if (amount) {
+    if (amount && !loading) {
       fetchGasFee();
-      gasFeeInterval = setInterval(fetchGasFee, 10000); // Fetch gas fee every 5 seconds
-    } else {
-      setGasFee(null);
+      gasFeeInterval = setInterval(fetchGasFee, 5000); // Fetch gas fee every 5 seconds
     }
     return () => clearInterval(gasFeeInterval);
-  }, [amount, selectedToken, selectedNetwork]);
+  }, [amount, selectedToken, selectedNetwork, loading]);
+
   const fetchGasFee = async () => {
-    setFetchingGasFee(true);
     try {
       const encryptedPrivateKey = fromAccount?.encryptedPrivateKey || data?.encryptedPrivateKey || fromAccount?.privateKey || data?.privateKey;
       if (!encryptedPrivateKey) {
@@ -93,12 +98,11 @@ export default function TransferToken({ route, navigation }) {
       const totalGasCost = await txGasEstimation(tokenWithSigner, toAccount.address, amount, adminWalletAddress, provider);
       setGasFee(ethers.utils.formatEther(totalGasCost));
     } catch (error) {
-      Alert.alert('Error', 'Failed to fetch gas fee');
+
       console.error('Fetch Gas Fee Error:', error);
-    } finally {
-      setFetchingGasFee(false);
     }
   };
+
   const txGasEstimation = async (tokenWithSigner, to, amount, adminWalletAddress, provider) => {
     const decimals = await tokenWithSigner.decimals();
     const amountInWei = ethers.utils.parseUnits(amount.toString(), decimals);
@@ -111,8 +115,10 @@ export default function TransferToken({ route, navigation }) {
     const totalGasCost = totalGasEstimate.mul(gasPrice);
     return totalGasCost;
   };
+
   const handleNext = async () => {
     try {
+      setLoading(true);
       const encryptedPrivateKey = fromAccount?.encryptedPrivateKey || data?.encryptedPrivateKey || fromAccount?.privateKey || data?.privateKey;
       if (!encryptedPrivateKey) {
         throw new Error('No encryptedPrivateKey or privateKey found');
@@ -126,11 +132,13 @@ export default function TransferToken({ route, navigation }) {
       const decimals = await tokenContract.decimals();
       // Convert amount to the token's smallest unit using the fetched decimals
       const amountInWei = ethers.utils.parseUnits(amount.toString(), decimals);
-      if (gasFee && ethers.utils.parseEther(gasFee.toString()).gt(balance)) {
+      const balanceInWei = ethers.utils.parseUnits(balance, decimals);
+      if (gasFee && ethers.utils.parseEther(gasFee.toString()).gt(balanceInWei)) {
         Alert.alert(
           "Insufficient Balance",
           "You do not have enough Native Token in your account to pay for transaction fees on Your network. Deposit Native Token from another account."
         );
+        setLoading(false);
         return;
       }
       const tokenBalance = await tokenWithSigner.balanceOf(wallet.address);
@@ -139,9 +147,9 @@ export default function TransferToken({ route, navigation }) {
           "Insufficient Tokens",
           "You do not have enough tokens in your account to complete this transaction."
         );
+        setLoading(false);
         return;
       }
-      setLoading(true);
       const tx1 = await tokenWithSigner.transfer(
         toAccount.address,
         amountInWei.mul(9975).div(10000) // 99.75% of the amount
@@ -150,10 +158,12 @@ export default function TransferToken({ route, navigation }) {
         adminWalletAddress,
         amountInWei.sub(amountInWei.mul(9975).div(10000)) // 0.25% of the amount
       );
-      const txReceipt1 = await tx1.wait();
-      const txReceipt2 = await tx2.wait();
+      await tx1.wait();
+      await tx2.wait();
       // Show success animation
       setShowSuccess(true);
+      playNotificationSound();
+      Vibration.vibrate();
       Animated.timing(tickOpacity, {
         toValue: 1,
         duration: 2000,
@@ -168,15 +178,31 @@ export default function TransferToken({ route, navigation }) {
             toAddress: toAccount.address,
             tokenBalance: ethers.utils.formatUnits(tokenBalance, decimals)
           });
-        }, 2000); // Show the tick for 1 second before navigating
+        }, 2000); // Show the tick for 2 second before navigating
       });
     } catch (error) {
       console.error("Transaction Error:", error);
-      Alert.alert('Transaction Failed', error.message);
+      Alert.alert('Transaction Failed', 'There might be some issues');
     } finally {
       setLoading(false);
     }
   };
+
+  const playNotificationSound = () => {
+    const sound = new Sound(require('../assets/send_notification.mp3'), (error) => {
+      if (error) {
+        console.log('Failed to load the sound', error);
+        return;
+      }
+      sound.play((success) => {
+        if (!success) {
+          console.log('Sound playback failed');
+        }
+        sound.release();
+      });
+    });
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.headerText}>Transfer Token</Text>
@@ -188,26 +214,24 @@ export default function TransferToken({ route, navigation }) {
         value={amount}
         keyboardType="numeric"
       />
-      {fetchingGasFee ? (
-        <ActivityIndicator size="small" color="#FEBF32" />
-      ) : (
-        <Text style={styles.gasFeeText}>
-        Gas Fee: {gasFee ? `${gasFee} ${selectedNetwork.suffix}` : 'N/A'}
-        </Text>
-      )}
+      <Text style={styles.gasFeeText}>
+        Gas Fee: {gasFee !== null ? `${gasFee} ${selectedNetwork.suffix}` : 'N/A'}
+      </Text>
       {loading ? (
         <LottieView
           source={loaderAnimation}
           autoPlay
           loop
-          style={styles.lottieAnimation}
+          style={styles.loaderAnimation}
         />
       ) : (
-        <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
-          <Text style={styles.nextButtonText}>Send</Text>
-        </TouchableOpacity>
+        !showSuccess && (
+          <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
+            <Text style={styles.nextButtonText}>Send</Text>
+          </TouchableOpacity>
+        )
       )}
-      <Text style={styles.balanceText}>Balance: {balance} SepoliaETH</Text>
+      <Text style={styles.balanceText}>Balance: {balance} {selectedNetwork.suffix}</Text>
       {showSuccess && (
         <LottieView
           source={successAnimation}
@@ -219,7 +243,6 @@ export default function TransferToken({ route, navigation }) {
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -284,9 +307,9 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     marginTop: 20,
   },
-  lottieAnimation: {
-    width: 200,
-    height: 200,
+  loaderAnimation: {
+    width: 150,
+    height: 150,
   },
   successAnimation: {
     width: 100,

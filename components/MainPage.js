@@ -190,42 +190,44 @@ export default function MainPage({ navigation, route }) {
     },
   ];
 
-  const [networks, setNetworks] = useState([
+  const networks = [
     {
       name: 'Sepolia',
-      networkurl:
-        'https://sepolia.infura.io/v3/215d4e9d78b5430fb64f66b61d84c1e9',
+      networkurl: 'https://sepolia.infura.io/v3/215d4e9d78b5430fb64f66b61d84c1e9',
       suffix: 'ETH',
+      chainId: '0xaa36a7',
     },
     {
       name: 'Ethereum Mainnet',
-      networkurl:
-        'https://mainnet.infura.io/v3/215d4e9d78b5430fb64f66b61d84c1e9',
+      networkurl: 'https://mainnet.infura.io/v3/215d4e9d78b5430fb64f66b61d84c1e9',
       suffix: 'ETH',
+      chainId: '0x1',
     },
     {
       name: 'Polygon Mainnet',
-      networkurl:
-        'https://polygon-mainnet.infura.io/v3/215d4e9d78b5430fb64f66b61d84c1e9',
+      networkurl: 'https://polygon-mainnet.infura.io/v3/215d4e9d78b5430fb64f66b61d84c1e9',
       suffix: 'MATIC',
+      chainId: '0x89',
     },
     {
       name: 'Amoy',
-      networkurl:
-        'https://polygon-amoy.infura.io/v3/215d4e9d78b5430fb64f66b61d84c1e9',
+      networkurl: 'https://polygon-amoy.infura.io/v3/215d4e9d78b5430fb64f66b61d84c1e9',
       suffix: 'MATIC',
+      chainId: '0x89',
     },
     {
       name: 'BNB Chain Mainnet',
       networkurl: 'https://bsc-dataseed.binance.org/',
       suffix: 'BNB',
+      chainId: '0x38',
     },
     {
       name: 'BNB testnet',
       networkurl: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
       suffix: 'BNB',
+      chainId: '0x61',
     },
-  ]);
+  ];
 
   // console.log('tokens === ',tokens);
 
@@ -856,7 +858,7 @@ export default function MainPage({ navigation, route }) {
         </Modal>
 
       </View>
-      <Navigation selectedAccount={selectedAccount} />
+      <Navigation selectedAccount={selectedAccount} selectedNetwork={selectedNetwork} />
     </>
   );
 }
@@ -972,7 +974,7 @@ const styles = StyleSheet.create({
     height: 40,
     marginRight: -10,
     borderRadius: 25,
-    marginBottom:7
+    marginBottom: 7
     // Add other styles if needed
   },
   actionButton: {

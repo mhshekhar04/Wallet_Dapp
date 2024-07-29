@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-const Navigation = ({selectedAccount}) => {
+const Navigation = ({selectedAccount,selectedNetwork}) => {
   const route = useRoute();
   //   const {selectedAccount} = route.params || {};
   const navigation = useNavigation();
@@ -38,7 +38,7 @@ const Navigation = ({selectedAccount}) => {
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.navButton}
-        onPress={() => navigation.navigate('Discover', {selectedAccount})}>
+        onPress={() => navigation.navigate('Discover', {selectedAccount,selectedNetwork})}>
         <FontAwesome name="compass" size={24} color="#c0c0c0" />
         <Text style={styles.navButtonText}>Discover</Text>
       </TouchableOpacity>

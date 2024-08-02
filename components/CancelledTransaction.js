@@ -22,15 +22,15 @@ const CancelledTransaction = ({ route }) => {
 
         <View style={styles.buttonRow}>
           <TouchableOpacity style={styles.actionButton}>
-            <FontAwesome name="arrow-up" size={24} color="#c0c0c0" />
+            <FontAwesome name="arrow-up" size={24} color="#FEBF32" />
             <Text style={styles.buttonText}>Send</Text>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.actionButton]}>
-            <FontAwesome name="arrow-down" size={24} color="#c0c0c0" />
+            <FontAwesome name="arrow-down" size={24} color="#FEBF32" />
             <Text style={styles.buttonText}>Receive</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.actionButton}>
-            <FontAwesome name="shopping-cart" size={24} color="#c0c0c0" />
+            <FontAwesome name="shopping-cart" size={24} color="#FEBF32" />
             <Text style={styles.buttonText}>Buy</Text>
           </TouchableOpacity>
         </View>
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     fontSize: 40,
     fontWeight: '300',
     lineHeight: 56,
-    color: '#c0c0c0',
+    color: '#FEBF32',
     marginTop: 20,
   },
   usdText: {
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   buyButton: {
-    backgroundColor: '#c0c0c0',
+    backgroundColor: '#FEBF32',
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 8,
@@ -275,7 +275,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   viewButtonText: {
-    color: '#c0c0c0',
+    color: '#FEBF32',
     fontFamily: 'Poppins',
     fontSize: 16,
     fontWeight: '600',

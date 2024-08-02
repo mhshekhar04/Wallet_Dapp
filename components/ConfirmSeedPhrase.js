@@ -126,7 +126,7 @@ const ConfirmSeedPhrase = ({navigation, route}) => {
               styles.rectangle,
               {
                 backgroundColor:
-                  randomPosition === index ? '#c0c0c0' : '#222531',
+                  randomPosition === index ? '#FEBF32' : '#222531',
               },
             ]}
           />
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 2,
   },
   activeRectangle: {
-    backgroundColor: '#c0c0c0',
+    backgroundColor: '#FEBF32',
   },
   title: {
     fontFamily: 'Poppins',
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
     marginTop: 80,
   },
   activeButton: {
-    backgroundColor: '#c0c0c0',
+    backgroundColor: '#FEBF32',
   },
   disabledButton: {
     backgroundColor: '#C4C4C4',

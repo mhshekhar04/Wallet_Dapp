@@ -3,22 +3,15 @@ import React, { useContext, useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { AccountsContext } from './AccountsContext';
 import SecureStorage from 'rn-secure-storage';
-<<<<<<< Updated upstream
-=======
 
 
 
 
 
->>>>>>> Stashed changes
 const SuccessSeedPhrase = () => {
   const { accounts, generateNewAccounts, addAccount } = useContext(AccountsContext);
   const scrollViewRef = useRef(null);
   const navigation = useNavigation();
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
   const nextSuccessPage = async() => {
     try {
       const storedAccounts = await SecureStorage.getItem('accounts');
@@ -26,19 +19,11 @@ const SuccessSeedPhrase = () => {
         console.error('No accounts found in local storage');
         return;
       }
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
       let parsedAccounts = JSON.parse(storedAccounts);
       if (!parsedAccounts || parsedAccounts.length === 0) {
         console.error('No valid accounts found in local storage');
         return;
       }
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
       parsedAccounts.sort((a, b) => {
         const aName = a.name.match(/Account (\d+)/);
         const bName = b.name.match(/Account (\d+)/);
@@ -47,10 +32,6 @@ const SuccessSeedPhrase = () => {
         }
         return 0;
       });
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
       let fetchedAccountIndex;
       try {
         const storedFetchedAccountIndex = await SecureStorage.getItem('fetchedAccountIndex');
@@ -61,20 +42,10 @@ const SuccessSeedPhrase = () => {
         console.error('Error retrieving fetchedAccountIndex from local storage:', error);
         fetchedAccountIndex = 0;
       }
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
       if (fetchedAccountIndex >= parsedAccounts.length) {
         console.log('All accounts have already been generated');
         return;
       }
-<<<<<<< Updated upstream
-      const nextAccount = parsedAccounts[fetchedAccountIndex];
-      const accountExists = generateNewAccounts.some(
-        (account) => account.address === nextAccount.address
-      );
-=======
 
       const nextAccount = parsedAccounts[fetchedAccountIndex];
 
@@ -82,22 +53,16 @@ const SuccessSeedPhrase = () => {
         (account) => account.address === nextAccount.address
       );
 
->>>>>>> Stashed changes
       if (accountExists) {
         console.log('Account already exists:', nextAccount);
         Alert.alert('Account already exists:');
         return;
       }
-<<<<<<< Updated upstream
-      addAccount(nextAccount);
-      await SecureStorage.setItem('fetchedAccountIndex', (fetchedAccountIndex + 1).toString());
-=======
 
       addAccount(nextAccount);
 
       await SecureStorage.setItem('fetchedAccountIndex', (fetchedAccountIndex + 1).toString());
 
->>>>>>> Stashed changes
       setTimeout(() => {
         if (scrollViewRef.current) {
           scrollViewRef.current.scrollToEnd({ animated: true });
@@ -123,7 +88,7 @@ const SuccessSeedPhrase = () => {
         You've successfully protected your wallet. Remember to keep your seed phrase safe, it's your responsibility!
       </Text>
       <Text style={styles.infoText}>
-      Navigator cannot recover your wallet if you loose it.
+      CC Wallet cannot recover your wallet if you loose it.
       </Text>
       <TouchableOpacity style={styles.button} onPress={nextSuccessPage}>
         <Text style={styles.buttonText}>Next</Text>
@@ -157,7 +122,7 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     lineHeight: 56,
     textAlign: 'center',
-    color: '#C0C0C0',
+    color: '#FEBF32',
     marginBottom: 16,
     marginTop: 36,
     width: '80%',
@@ -185,7 +150,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#C0C0C0',
+    backgroundColor: '#FEBF32',
     borderRadius: 8,
   },
   buttonText: {

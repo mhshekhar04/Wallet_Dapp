@@ -26,7 +26,7 @@ const SecureWallet = () => {
       <Image source={require('../assets/shield.png')} style={styles.image} />
 
       {/* Secure Your Wallet text */}
-      <Text style={styles.title}>Secure Your Navigator</Text>
+      <Text style={styles.title}>Secure Your CC Wallet</Text>
 
       {/* Description text 1 */}
       <Text style={styles.description}>
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
   remindLaterButton: {
     width: '90%',
     height: 48,
-    backgroundColor: '#c0c0c0',
+    backgroundColor: '#FEBF32',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 8,
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
   startButton: {
     width: '90%',
     height: 48,
-    backgroundColor: '#c0c0c0',
+    backgroundColor: '#FEBF32',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 8,

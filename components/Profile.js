@@ -207,7 +207,7 @@ const Profile = ({ navigation, route }) => {
       <Text style={styles.header}>My Profile</Text>
 
       <TouchableOpacity style={styles.section}>
-        <FontAwesome name="user-circle" size={20} color="#c0c0c0" />
+        <FontAwesome name="user-circle" size={20} color="#FEBF32" />
         {selectedAccount && (
           <View style={styles.accountInfo}>
             <Text style={styles.accountName}>{selectedAccount?.name}</Text>
@@ -218,7 +218,7 @@ const Profile = ({ navigation, route }) => {
               <TouchableOpacity
                 onPress={() => copyToClipboard(selectedAccount?.address)}
               >
-                <FontAwesome name="copy" size={16} color="#c0c0c0" />
+                <FontAwesome name="copy" size={16} color="#FEBF32" />
               </TouchableOpacity>
             </View>
           </View>
@@ -229,7 +229,7 @@ const Profile = ({ navigation, route }) => {
         style={styles.section}
         onPress={() => navigation.navigate('ImportAccount',{selectedAccount})}
       >
-        <FontAwesome name="download" size={20} color="#c0c0c0" />
+        <FontAwesome name="download" size={20} color="#FEBF32" />
         <Text style={styles.sectionTitle}>Import Account</Text>
       </TouchableOpacity>
 
@@ -237,17 +237,17 @@ const Profile = ({ navigation, route }) => {
         style={styles.section}
         onPress={() => handleRevealPrivateKey(selectedAccount)}
       >
-        <FontAwesome name="key" size={20} color="#c0c0c0" />
+        <FontAwesome name="key" size={20} color="#FEBF32" />
         <Text style={styles.sectionTitle}>Reveal Your Secret Key</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.section} onPress={handleYourWalletButton}>
-        <FontAwesome5 name="wallet" size={20} color="#c0c0c0" />
+        <FontAwesome5 name="wallet" size={20} color="#FEBF32" />
         <Text style={styles.sectionTitle}>Your Wallet</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.section}>
-        <FontAwesome name="user-plus" size={20} color="#c0c0c0" />
+        <FontAwesome name="user-plus" size={20} color="#FEBF32" />
         <Text style={styles.sectionTitle}>Your Referral Code</Text>
       </TouchableOpacity>
 
@@ -255,7 +255,7 @@ const Profile = ({ navigation, route }) => {
   style={styles.section}
   onPress={() => navigation.navigate('History', { selectedAccount })}
 >
-  <FontAwesome name="history" size={20} color="#c0c0c0" />
+  <FontAwesome name="history" size={20} color="#FEBF32" />
   <Text style={styles.sectionTitle}>Your Transaction History</Text>
 </TouchableOpacity>
 
@@ -427,7 +427,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   createButton: {
-    backgroundColor: '#c0c0c0',
+    backgroundColor: '#FEBF32',
     borderRadius: 20,
     paddingVertical: 10,
     paddingHorizontal: 20,
@@ -467,7 +467,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   verifyButton: {
-    backgroundColor: '#c0c0c0',
+    backgroundColor: '#FEBF32',
     borderRadius: 20,
     paddingVertical: 10,
     paddingHorizontal: 20,
@@ -513,7 +513,7 @@ const styles = StyleSheet.create({
   },
   activeFooterButton: {
     borderBottomWidth: 2,
-    borderBottomColor: '#c0c0c0',
+    borderBottomColor: '#FEBF32',
   },
 });
 
@@ -728,7 +728,7 @@ export default Profile;
 //       <Text style={styles.header}>My Profile</Text>
 
 //       <TouchableOpacity style={styles.section}>
-//         <FontAwesome name="user-circle" size={20} color="#c0c0c0" />
+//         <FontAwesome name="user-circle" size={20} color="#FEBF32" />
 //         {selectedAccount && (
 //           <View style={styles.accountInfo}>
 //             <Text style={styles.accountName}>{selectedAccount?.name}</Text>
@@ -738,7 +738,7 @@ export default Profile;
 //               </Text>
 //               <TouchableOpacity
 //                 onPress={() => copyToClipboard(selectedAccount?.address)}>
-//                 <FontAwesome name="copy" size={16} color="#c0c0c0" />
+//                 <FontAwesome name="copy" size={16} color="#FEBF32" />
 //               </TouchableOpacity>
 //             </View>
 //           </View>
@@ -748,36 +748,36 @@ export default Profile;
 //       {/* <TouchableOpacity
 //         style={styles.section}
 //         onPress={() => setShowCreateAccountModal(true)}>
-//         <FontAwesome name="plus-circle" size={20} color="#c0c0c0" />
+//         <FontAwesome name="plus-circle" size={20} color="#FEBF32" />
 //         <Text style={styles.sectionTitle}>Create Account</Text>
 //       </TouchableOpacity> */}
 
 //       <TouchableOpacity
 //         style={styles.section}
 //         onPress={() => navigation.navigate('ImportAccount')}>
-//         <FontAwesome name="download" size={20} color="#c0c0c0" />
+//         <FontAwesome name="download" size={20} color="#FEBF32" />
 //         <Text style={styles.sectionTitle}>Import Account</Text>
 //       </TouchableOpacity>
 
 //       <TouchableOpacity
 //         style={styles.section}
 //         onPress={() => handleRevealPrivateKey(selectedAccount)}>
-//         <FontAwesome name="key" size={20} color="#c0c0c0" />
+//         <FontAwesome name="key" size={20} color="#FEBF32" />
 //         <Text style={styles.sectionTitle}>Reveal Your Secret Key</Text>
 //       </TouchableOpacity>
 
 //       <TouchableOpacity style={styles.section} onPress={handleYourWalletButton}>
-//         <FontAwesome5 name="wallet" size={20} color="#c0c0c0" />
+//         <FontAwesome5 name="wallet" size={20} color="#FEBF32" />
 //         <Text style={styles.sectionTitle}>Your Wallet</Text>
 //       </TouchableOpacity>
 
 //       <TouchableOpacity style={styles.section}>
-//         <FontAwesome name="user-plus" size={20} color="#c0c0c0" />
+//         <FontAwesome name="user-plus" size={20} color="#FEBF32" />
 //         <Text style={styles.sectionTitle}>Your Referral Code</Text>
 //       </TouchableOpacity>
 
 //       <TouchableOpacity style={styles.section}>
-//         <FontAwesome name="history" size={20} color="#c0c0c0" />
+//         <FontAwesome name="history" size={20} color="#FEBF32" />
 //         <Text style={styles.sectionTitle}>Your Transaction History</Text>
 //       </TouchableOpacity>
 
@@ -785,12 +785,12 @@ export default Profile;
 //         <TouchableOpacity
 //           style={styles.footerButton}
 //           onPress={() => navigation.navigate('MainPage')}>
-//           <FontAwesome name="home" size={24} color="#c0c0c0" />
+//           <FontAwesome name="home" size={24} color="#FEBF32" />
 //           <Text style={styles.footerButtonText}>Home</Text>
 //         </TouchableOpacity>
 //         <TouchableOpacity
 //           style={[styles.footerButton, styles.activeFooterButton]}>
-//           <FontAwesome name="user" size={24} color="#c0c0c0" />
+//           <FontAwesome name="user" size={24} color="#FEBF32" />
 //           <Text style={styles.footerButtonText}>Profile</Text>
 //         </TouchableOpacity>
 //       </View>
@@ -950,7 +950,7 @@ export default Profile;
 //     width: '100%',
 //   },
 //   createButton: {
-//     backgroundColor: '#c0c0c0',
+//     backgroundColor: '#FEBF32',
 //     borderRadius: 20,
 //     paddingVertical: 10,
 //     paddingHorizontal: 20,
@@ -990,7 +990,7 @@ export default Profile;
 //     marginBottom: 10,
 //   },
 //   verifyButton: {
-//     backgroundColor: '#c0c0c0',
+//     backgroundColor: '#FEBF32',
 //     borderRadius: 20,
 //     paddingVertical: 10,
 //     paddingHorizontal: 20,
@@ -1031,7 +1031,7 @@ export default Profile;
 //   },
 //   activeFooterButton: {
 //     borderBottomWidth: 2,
-//     borderBottomColor: '#c0c0c0',
+//     borderBottomColor: '#FEBF32',
 //   },
 // });
 

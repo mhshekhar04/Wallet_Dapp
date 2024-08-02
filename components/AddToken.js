@@ -58,10 +58,15 @@ export default function AddToken({ navigation, route }) {
           address,
         )}/logo.png`;
         break;
+        case 'Core Mainnet':
+          tokenImageUrl = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/core/assets/${ethers.utils.getAddress(
+            address,
+          )}/logo.png`;
       default:
         tokenImageUrl = '';
         break;
     }
+    
     console.log(`Fetching token image from URL: ${tokenImageUrl}`);
     try {
       const response = await fetch(tokenImageUrl);
@@ -88,7 +93,7 @@ export default function AddToken({ navigation, route }) {
     const firstLetter = name.charAt(0).toUpperCase();
     return (
       <Svg height="50" width="50">
-        <Circle cx="25" cy="25" r="25" fill="#c0c0c0" />
+        <Circle cx="25" cy="25" r="25" fill="#FEBF32" />
         <SvgText
           x="25"
           y="35"
@@ -202,7 +207,7 @@ export default function AddToken({ navigation, route }) {
     <View style={styles.container}>
       <Text style={styles.header}>Add Token</Text>
       <View style={styles.warningContainer}>
-        <FontAwesome name="exclamation-triangle" size={24} color="#c0c0c0" />
+        <FontAwesome name="exclamation-triangle" size={24} color="#FEBF32" />
         <Text style={styles.warningText}>
           Anyone can create a token, including creating fake versions of
           existing tokens.
@@ -277,7 +282,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   warningText: {
-    color: '#c0c0c0',
+    color: '#FEBF32',
     marginLeft: 10,
     fontSize: 14,
     flex: 1,
@@ -307,7 +312,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   activeButton: {
-    backgroundColor: '#c0c0c0',
+    backgroundColor: '#FEBF32',
   },
   inactiveButton: {
     backgroundColor: '#555',
@@ -344,7 +349,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   importButton: {
-    backgroundColor: '#c0c0c0',
+    backgroundColor: '#FEBF32',
     padding: 15,
     borderRadius: 5,
     flex: 1,
@@ -499,7 +504,7 @@ const styles = StyleSheet.create({
 //       <Text style={styles.header}>Add Token</Text>
 
 //       <View style={styles.warningContainer}>
-//         <FontAwesome name="exclamation-triangle" size={24} color="#c0c0c0" />
+//         <FontAwesome name="exclamation-triangle" size={24} color="#FEBF32" />
 //         <Text style={styles.warningText}>
 //           Anyone can create a token, including creating fake versions of
 //           existing tokens.
@@ -560,7 +565,7 @@ const styles = StyleSheet.create({
 //     paddingTop: 40,
 //   },
 //   header: {
-//     color: '#c0c0c0',
+//     color: '#FEBF32',
 //     fontSize: 24,
 //     fontFamily: 'Poppins',
 //     marginBottom: 20,
@@ -605,7 +610,7 @@ const styles = StyleSheet.create({
 //     marginBottom: 20,
 //   },
 //   activeButton: {
-//     backgroundColor: '#c0c0c0',
+//     backgroundColor: '#FEBF32',
 //   },
 //   inactiveButton: {
 //     backgroundColor: '#555',
@@ -635,7 +640,7 @@ const styles = StyleSheet.create({
 //     marginRight: 10,
 //   },
 //   importButton: {
-//     backgroundColor: '#c0c0c0',
+//     backgroundColor: '#FEBF32',
 //     padding: 15,
 //     borderRadius: 5,
 //     flex: 1,

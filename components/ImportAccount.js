@@ -78,7 +78,7 @@ const ImportAccount = ({ navigation,route }) => {
     <View style={styles.container}>
       <Text style={styles.header}>Import Account</Text>
       <Text style={styles.description}>
-        Imported accounts won’t be associated with your Navigator Secret Recovery
+        Imported accounts won’t be associated with your CC Wallet Secret Recovery
         Phrase.
       </Text>
       <Text style={styles.label}>Enter your private key string here:</Text>
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
   button: {
-    backgroundColor: '#c0c0c0',
+    backgroundColor: '#FEBF32',
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 5,

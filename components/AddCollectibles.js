@@ -185,7 +185,7 @@ export default function AddCollectibles({navigation, route}) {
     <View style={styles.container}>
       <Text style={styles.header}>Add Collectibles</Text>
       <View style={styles.warningContainer}>
-        <FontAwesome name="exclamation-triangle" size={24} color="#c0c0c0" />
+        <FontAwesome name="exclamation-triangle" size={24} color="#FEBF32" />
         <Text style={styles.warningText}>
           Anyone can create a collectible, including creating fake versions of
           existing NFTs.
@@ -257,7 +257,7 @@ const styles = StyleSheet.create({
     paddingTop: 40,
   },
   header: {
-    color: '#c0c0c0',
+    color: '#FEBF32',
     fontSize: 24,
     fontFamily: 'Poppins',
     marginBottom: 20,
@@ -302,7 +302,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   activeButton: {
-    backgroundColor: '#c0c0c0',
+    backgroundColor: '#FEBF32',
   },
   inactiveButton: {
     backgroundColor: '#555',
@@ -339,7 +339,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   importButton: {
-    backgroundColor: '#c0c0c0',
+    backgroundColor: '#FEBF32',
     padding: 15,
     borderRadius: 5,
     flex: 1,

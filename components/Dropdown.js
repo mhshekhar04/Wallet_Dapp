@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 20,
     marginHorizontal: 16,
-    borderColor: '#c0c0c0',
+    borderColor: '#FEBF32',
     borderWidth: 1,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   headerText: {
-    color: '#c0c0c0',
+    color: '#FEBF32',
     textAlign: 'center',
     fontFamily: 'Poppins',
     fontSize: 18,
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   closeButtonText: {
-    color: '#c0c0c0',
+    color: '#FEBF32',
     textAlign: 'center',
     fontFamily: 'Poppins',
     fontSize: 16,

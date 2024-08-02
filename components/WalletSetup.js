@@ -365,8 +365,8 @@ export default function WalletSetup() {
 
   return (
     <View style={styles.container}>
-      <Image source={require('../assets/navigator_icon_grey.png')} style={styles.image} />
-      {/* <Svg height="60" width="100%">
+      <Image source={require('../assets/flogo.png')} style={styles.image} />
+      <Svg height="60" width="100%">
         <Defs>
           <LinearGradient id="grad" x1="0" y1="0" x2="1" y2="0">
             <Stop offset="0" stopColor="#A9CDFF" stopOpacity="1" />
@@ -383,10 +383,10 @@ export default function WalletSetup() {
           x="50%"
           y="50%"
           textAnchor="middle">
-          Navigator
+          CC Wallet
         </SvgText>
       </Svg>
-      <Text style={styles.title}>Navigator</Text> */}
+  
 
       <TouchableOpacity
         onPress={() => navigation.navigate('CreatePasswordImport')}>
@@ -514,12 +514,12 @@ const styles = StyleSheet.create({
     fontSize: 26,
     marginBottom: 10,
     lineHeight: 24,
-    color: '#c0c0c0',
+    color: '#FEBF32',
     textAlign: 'center',
   },
   buttonYellow: {
     borderRadius: 8,
-    backgroundColor: '#c0c0c0',
+    backgroundColor: '#FEBF32',
     paddingVertical: 16,
     paddingHorizontal: 24,
     marginBottom: 20,

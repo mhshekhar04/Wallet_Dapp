@@ -15,8 +15,8 @@
     <application
         android:name=".MainApplication"
         android:label="@string/app_name"
-        android:icon="@mipmap/navigator_icon_grey"
-        android:roundIcon="@mipmap/navigator_icon_grey"
+        android:icon="@mipmap/flogo"
+        android:roundIcon="@mipmap/flogo"
         android:allowBackup="false"
         android:theme="@style/AppTheme">
 

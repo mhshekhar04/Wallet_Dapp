@@ -3,10 +3,6 @@ import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {AccountsContext} from './AccountsContext';
 import SecureStorage from 'rn-secure-storage';
 import React, {useContext, useState, useEffect, useRef} from 'react';
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
 const VerifiedSeedPhrase = () => {
   const {accounts, generateNewAccounts, addAccount} =
     useContext(AccountsContext);
@@ -19,19 +15,11 @@ const VerifiedSeedPhrase = () => {
         console.error('No accounts found in local storage');
         return;
       }
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
       let parsedAccounts = JSON.parse(storedAccounts);
       if (!parsedAccounts || parsedAccounts.length === 0) {
         console.error('No valid accounts found in local storage');
         return;
       }
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
       parsedAccounts.sort((a, b) => {
         const aName = a.name.match(/Account (\d+)/);
         const bName = b.name.match(/Account (\d+)/);
@@ -40,10 +28,6 @@ const VerifiedSeedPhrase = () => {
         }
         return 0;
       });
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
       let fetchedAccountIndex;
       try {
         const storedFetchedAccountIndex = await SecureStorage.getItem(
@@ -59,20 +43,10 @@ const VerifiedSeedPhrase = () => {
         );
         fetchedAccountIndex = 0;
       }
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
       if (fetchedAccountIndex >= parsedAccounts.length) {
         console.log('All accounts have already been generated');
         return;
       }
-<<<<<<< Updated upstream
-      const nextAccount = parsedAccounts[fetchedAccountIndex];
-      const accountExists = generateNewAccounts.some(
-        account => account.address === nextAccount.address,
-      );
-=======
 
       const nextAccount = parsedAccounts[fetchedAccountIndex];
 
@@ -80,27 +54,18 @@ const VerifiedSeedPhrase = () => {
         account => account.address === nextAccount.address,
       );
 
->>>>>>> Stashed changes
       if (accountExists) {
         console.log('Account already exists:', nextAccount);
         Alert.alert('Account already exists:');
         return;
       }
-<<<<<<< Updated upstream
-      addAccount(nextAccount);
-=======
 
       addAccount(nextAccount);
 
->>>>>>> Stashed changes
       await SecureStorage.setItem(
         'fetchedAccountIndex',
         (fetchedAccountIndex + 1).toString(),
       );
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
       setTimeout(() => {
         if (scrollViewRef.current) {
           scrollViewRef.current.scrollToEnd({animated: true});
@@ -124,7 +89,7 @@ const VerifiedSeedPhrase = () => {
         phrase safe, it's your responsibility!
       </Text>
       <Text style={styles.description}>
-        "Navigator cannot recover your wallet if you lose it."
+        "CC Wallet cannot recover your wallet if you lose it."
       </Text>
       <TouchableOpacity style={styles.verifyButton} onPress={mainPage}>
         <Text style={styles.buttonText}>Next</Text>
@@ -182,7 +147,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#C0C0C0',
+    backgroundColor: '#FEBF32',
     borderRadius: 8,
   },
   buttonText: {

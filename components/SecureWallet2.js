@@ -11,7 +11,7 @@ const SecureWallet2 = ({ navigation }) => {
       </View>
       
       <Text style={styles.title}>
-        Secure Your Navigator
+        Secure Your CC Wallet
       </Text>
 
       <Text style={styles.subtitle}>
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   },
   title: {
     width: 327,
-    color: '#c0c0c0',
+    color: '#FEBF32',
     textAlign: 'center',
     fontFamily: 'Poppins_600SemiBold',
     fontSize: 18,
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 8,
-    backgroundColor: '#c0c0c0',
+    backgroundColor: '#FEBF32',
   },
   buttonText: {
     color: '#000',

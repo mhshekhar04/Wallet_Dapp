@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#17171A',
   },
   text: {
-    color: '#c0c0c0',
+    color: '#FEBF32',
     fontFamily: 'Poppins',
     fontSize: 24,
     fontWeight: '600',

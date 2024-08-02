@@ -107,7 +107,7 @@ const NoteDownSeed = ({ navigation }) => {
         <>
           <ActivityIndicator
             size="large"
-            color="#c0c0c0"
+            color="#FEBF32"
             style={styles.loadingIndicator}
           />
           <Text style={{ color: 'white' }}>
@@ -159,13 +159,13 @@ const styles = StyleSheet.create({
   rectangle: {
     width: '30%',
     height: 4,
-    backgroundColor: '#c0c0c0',
+    backgroundColor: '#FEBF32',
   },
   title: {
     fontFamily: 'Poppins_600SemiBold',
     fontSize: 24,
     lineHeight: 36,
-    color: '#c0c0c0',
+    color: '#FEBF32',
     marginVertical: 20,
     textAlign: 'center',
   },
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   button: {
-    backgroundColor: '#c0c0c0',
+    backgroundColor: '#FEBF32',
     borderRadius: 8,
     paddingVertical: 12,
     paddingHorizontal: 24,

@@ -86,7 +86,7 @@ const History = ({ route, navigation }) => {
   if (loading) {
     return (
       <View style={styles.loaderContainer}>
-        <ActivityIndicator size="large" color="#c0c0c0" />
+        <ActivityIndicator size="large" color="#FEBF32" />
       </View>
     );
   }
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
   },
   transactionStatus: {
     fontSize: 16,
-    color: '#c0c0c0',
+    color: '#FEBF32',
   },
   transactionAmount: {
     alignItems: 'flex-end',

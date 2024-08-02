@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   detailValue: {
-    color: '#c0c0c0',
+    color: '#FEBF32',
     fontFamily: 'Poppins',
     fontSize: 16,
     fontWeight: '500',

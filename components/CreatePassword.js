@@ -196,7 +196,7 @@ export default function SetupScreen() {
         <>
           <Text style={styles.title}>Create Password</Text>
           <Text style={styles.subtitle}>
-            This password will unlock your Navigator only on this service
+            This password will unlock your CC Wallet only on this service
           </Text>
           <View style={styles.inputContainer}>
             <Text style={styles.inputLabel}>New Password</Text>
@@ -245,10 +245,10 @@ export default function SetupScreen() {
             <CheckBox
               value={isChecked}
               onValueChange={setChecked}
-              color={isChecked ? '#c0c0c0' : undefined}
+              color={isChecked ? '#FEBF32' : undefined}
             />
             <Text style={styles.checkboxText}>
-              I understand that Navigator cannot recover this password for me.{' '}
+              I understand that CC Wallet cannot recover this password for me.{' '}
               <Text style={styles.learnMore}>Learn more</Text>
             </Text>
           </View>
@@ -263,7 +263,7 @@ export default function SetupScreen() {
         <>
           <Text style={styles.title}>Create PIN</Text>
           <Text style={styles.subtitle}>
-            This PIN will be used to access your Navigator
+            This PIN will be used to access your CC Wallet
           </Text>
           <View style={styles.pinContainer}>
             <View style={styles.pinInputContainer}>
@@ -327,7 +327,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins_600SemiBold',
     fontSize: 16,
     lineHeight: 24,
-    color: '#c0c0c0',
+    color: '#FEBF32',
     marginVertical: 20,
     textAlign: 'center',
   },
@@ -398,7 +398,7 @@ const styles = StyleSheet.create({
     padding: 12,
     alignItems: 'center',
     borderRadius: 8,
-    backgroundColor: '#c0c0c0',
+    backgroundColor: '#FEBF32',
     marginTop: 20,
   },
   createPasswordButtonText: {
@@ -434,7 +434,7 @@ const styles = StyleSheet.create({
     padding: 12,
     alignItems: 'center',
     borderRadius: 8,
-    backgroundColor: '#c0c0c0',
+    backgroundColor: '#FEBF32',
     marginTop: 20,
     opacity: 1,
   },
@@ -449,7 +449,7 @@ const styles = StyleSheet.create({
     padding: 12,
     alignItems: 'center',
     borderRadius: 8,
-    backgroundColor: '#c0c0c0',
+    backgroundColor: '#FEBF32',
     marginTop: 20,
   },
   buttonText: {
@@ -488,7 +488,7 @@ const styles = StyleSheet.create({
     padding: 12,
     alignItems: 'center',
     borderRadius: 8,
-    backgroundColor: '#c0c0c0',
+    backgroundColor: '#FEBF32',
     marginTop: 20,
   },
   saveButtonText: {

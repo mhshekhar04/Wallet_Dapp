@@ -2,45 +2,21 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Navigation from './Navigation';
-<<<<<<< Updated upstream
-=======
 import { useWalletConnect } from './walletConnect';
->>>>>>> Stashed changes
 
 const dexLinks = [
   { name: '1inch.io', url: 'https://1inch.io' },
   { name: 'Curve', url: 'https://curve.fi' },
   { name: 'Pancakeswap', url: 'https://pancakeswap.finance/swap' },
-<<<<<<< Updated upstream
-  { name: 'Aerodrome', url: 'https://aerodrome.finance/swap' },
-  { name: 'Gmx', url: 'https://app.gmx.io/#/trade' },
-];
-
-export default function Discover({ navigation, route }) {
-  const { selectedAccount, selectedNetwork } = route.params;
-=======
   { name: 'Aerodrome', url: 'https://aerodrome.com' },
   { name: 'Gmx', url: 'https://gmx.io' },
 ];
 
 export default function Discover({ navigation, route }) {
   const { selectedAccount } = route.params;
->>>>>>> Stashed changes
   const [searchQuery, setSearchQuery] = useState('');
   const { connector, accounts, chainId } = useWalletConnect();
 
-<<<<<<< Updated upstream
-  const handleSearch = () => {
-    let url = searchQuery.trim();
-    if (!/^https?:\/\//i.test(url)) {
-      url = `https://${url}`;
-    }
-    navigation.navigate('WebViewScreen', { url, selectedAccount, selectedNetwork });
-  };
-
-  const handleLinkPress = (url) => {
-    navigation.navigate('WebViewScreen', { url, selectedAccount, selectedNetwork });
-=======
   const handleSearchAndConnect = async () => {
     try {
       let url = searchQuery.trim();
@@ -92,7 +68,6 @@ export default function Discover({ navigation, route }) {
       console.error('Error during WalletConnect session creation:', error);
       Alert.alert('Error', 'An error occurred while connecting to WalletConnect. Please try again.');
     }
->>>>>>> Stashed changes
   };
 
   return (
@@ -106,11 +81,6 @@ export default function Discover({ navigation, route }) {
           keyboardType="url"
           autoCapitalize="none"
         />
-<<<<<<< Updated upstream
-        <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
-          <Text style={styles.searchButtonText}>Go</Text>
-        </TouchableOpacity>
-=======
         <TouchableOpacity style={styles.searchButton} onPress={handleSearchAndConnect}>
           <Text style={styles.searchButtonText}>Go & Connect Wallet</Text>
         </TouchableOpacity>
@@ -120,7 +90,6 @@ export default function Discover({ navigation, route }) {
             <Text style={styles.walletText}>{accounts[0]}</Text>
           </View>
         )}
->>>>>>> Stashed changes
         <ScrollView>
           {dexLinks.map((dex) => (
             <TouchableOpacity
@@ -129,11 +98,7 @@ export default function Discover({ navigation, route }) {
               onPress={() => handleLinkPress(dex.url)}
             >
               <Text style={styles.linkText}>{dex.name}</Text>
-<<<<<<< Updated upstream
-              <FontAwesome name="external-link" size={16} color="#c0c0c0" />
-=======
               <FontAwesome name="external-link" size={16} color="#FEBF32" />
->>>>>>> Stashed changes
             </TouchableOpacity>
           ))}
         </ScrollView>
@@ -160,6 +125,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#333',
   },
   searchButton: {
+    backgroundColor: '#FEBF32',
     backgroundColor: '#FEBF32',
     borderRadius: 5,
     paddingVertical: 10,
@@ -194,8 +160,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-<<<<<<< Updated upstream
-=======
 
 
 
@@ -430,4 +394,3 @@ const styles = StyleSheet.create({
 //     fontSize: 16,
 //   },
 // });
->>>>>>> Stashed changes

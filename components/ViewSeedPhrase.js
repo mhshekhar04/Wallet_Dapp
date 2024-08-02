@@ -27,7 +27,7 @@ const ViewSeedPhrase = () => {
         <TouchableOpacity
           style={styles.viewButton}
           onPress={() => navigation.replace('NoteDownSeed')}>
-          <Feather name="eye" size={18} color="#c0c0c0" />
+          <Feather name="eye" size={18} color="#FEBF32" />
           <Text style={styles.viewButtonText}>View</Text>
         </TouchableOpacity>
       </View>
@@ -114,12 +114,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 16,
-    borderColor: '#c0c0c0',
+    borderColor: '#FEBF32',
     borderWidth: 5,
     borderRadius: 3,
   },
   viewButtonText: {
-    color: '#c0c0c0',
+    color: '#FEBF32',
     fontFamily: 'Poppins',
     fontSize: 16,
     fontWeight: '600',
@@ -202,7 +202,7 @@ export default ViewSeedPhrase;
 //         <TouchableOpacity
 //           style={styles.viewButton}
 //           onPress={() => navigation.navigate('ImportSeedPhrase')}>
-//           <Feather name="eye" size={18} color="#c0c0c0" />
+//           <Feather name="eye" size={18} color="#FEBF32" />
 //           <Text style={styles.viewButtonText}>View</Text>
 //         </TouchableOpacity>
 //       </View>
@@ -284,12 +284,12 @@ export default ViewSeedPhrase;
 //     flexDirection: 'row',
 //     alignItems: 'center',
 //     padding: 16,
-//     borderColor: '#c0c0c0',
+//     borderColor: '#FEBF32',
 //     borderWidth: 5,
 //     borderRadius: 3,
 //   },
 //   viewButtonText: {
-//     color: '#c0c0c0',
+//     color: '#FEBF32',
 //     fontFamily: 'Poppins',
 //     fontSize: 16,
 //     fontWeight: '600',

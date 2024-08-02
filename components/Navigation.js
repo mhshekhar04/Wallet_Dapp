@@ -23,7 +23,7 @@ const Navigation = ({selectedAccount,selectedNetwork}) => {
       <TouchableOpacity
         style={styles.navButton}
         onPress={() => navigation.navigate('MainPage')}>
-        <FontAwesome name="home" size={24} color="#c0c0c0" />
+        <FontAwesome name="home" size={24} color="#FEBF32" />
         <Text style={styles.navButtonText}>Home</Text>
       </TouchableOpacity>
       <TouchableOpacity
@@ -33,13 +33,13 @@ const Navigation = ({selectedAccount,selectedNetwork}) => {
             navigation.navigate('Profile', {selectedAccount});
           }
         }}>
-        <FontAwesome name="user" size={24} color="#c0c0c0" />
+        <FontAwesome name="user" size={24} color="#FEBF32" />
         <Text style={styles.navButtonText}>Profile</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.navButton}
         onPress={() => navigation.navigate('Discover', {selectedAccount,selectedNetwork})}>
-        <FontAwesome name="compass" size={24} color="#c0c0c0" />
+        <FontAwesome name="compass" size={24} color="#FEBF32" />
         <Text style={styles.navButtonText}>Discover</Text>
       </TouchableOpacity>
     </View>

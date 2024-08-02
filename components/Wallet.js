@@ -92,11 +92,11 @@ export default function Wallet() {
 
       <View style={styles.buttonRow}>
         <TouchableOpacity style={styles.actionButton}>
-          <FontAwesome name="arrow-up" size={24} color="#c0c0c0" />
+          <FontAwesome name="arrow-up" size={24} color="#FEBF32" />
           <Text style={styles.buttonText}>Send</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.actionButton]}>
-          <FontAwesome name="arrow-down" size={24} color="#c0c0c0" />
+          <FontAwesome name="arrow-down" size={24} color="#FEBF32" />
           <Text style={styles.buttonText}>Receive</Text>
         </TouchableOpacity>
       </View>
@@ -122,15 +122,15 @@ export default function Wallet() {
 
       <View style={styles.footer}>
         <TouchableOpacity style={styles.footerButton}>
-          <FontAwesome name="wallet" size={24} color="#c0c0c0" />
+          <FontAwesome name="wallet" size={24} color="#FEBF32" />
           <Text style={styles.footerText}>Wallet</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.footerButton}>
-          <FontAwesome name="exchange" size={24} color="#c0c0c0" />
+          <FontAwesome name="exchange" size={24} color="#FEBF32" />
           <Text style={styles.footerText}>Swap</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.footerButton}>
-          <FontAwesome name="cog" size={24} color="#c0c0c0" />
+          <FontAwesome name="cog" size={24} color="#FEBF32" />
           <Text style={styles.footerText}>Settings</Text>
         </TouchableOpacity>
       </View>
@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
     fontSize: 40,
     fontWeight: '300',
     lineHeight: 56,
-    color: '#c0c0c0',
+    color: '#FEBF32',
     marginTop: 20,
   },
   usdText: {
@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#2A2D3C',
   },
   buttonText: {
-    color: '#c0c0c0',
+    color: '#FEBF32',
     textAlign: 'center',
     fontFamily: 'Poppins',
     fontSize: 14,
@@ -302,7 +302,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   footerText: {
-    color: '#c0c0c0',
+    color: '#FEBF32',
     textAlign: 'center',
     fontFamily: 'Poppins',
     fontSize: 12,

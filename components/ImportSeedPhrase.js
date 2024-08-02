@@ -189,7 +189,7 @@ const ImportSeedPhrase = ({ navigation }) => {
         <View style={styles.rectangle}></View>
       </View>
       <Text style={styles.header}>
-        Write down the Seed Phrase for your Navigator
+        Write down the Seed Phrase for your CC Wallet
       </Text>
       <View style={styles.seedPhraseContainer}>
         {seedPhrase.map((word, index) => (
@@ -201,6 +201,7 @@ const ImportSeedPhrase = ({ navigation }) => {
             value={word}
             maxLength={20}
             autoFocus={index === 0}
+            autoCapitalize="none"
           />
         ))}
       </View>
@@ -215,15 +216,15 @@ const ImportSeedPhrase = ({ navigation }) => {
             colorFilters={[
               {
                 keypath: 'Shape Layer 1',
-                color: '#c0c0c0',
+                color: '#FEBF32',
               },
               {
                 keypath: 'Shape Layer 2',
-                color: '#c0c0c0',
+                color: '#FEBF32',
               },
               {
                 keypath: 'Shape Layer 3',
-                color: '#c0c0c0',
+                color: '#FEBF32',
               },
             ]}
           />
@@ -304,7 +305,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#c0c0c0',
+    backgroundColor: '#FEBF32',
     borderRadius: 8,
   },
   buttonText: {

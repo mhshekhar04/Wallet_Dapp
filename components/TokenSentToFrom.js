@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   nextButton: {
-    backgroundColor: '#c0c0c0',
+    backgroundColor: '#FEBF32',
     borderRadius: 8,
     paddingVertical: 14,
     alignItems: 'center',
@@ -548,7 +548,7 @@ const styles = StyleSheet.create({
 //     paddingHorizontal: 16,
 //   },
 //   nextButton: {
-//     backgroundColor: '#c0c0c0',
+//     backgroundColor: '#FEBF32',
 //     borderRadius: 8,
 //     paddingVertical: 14,
 //     alignItems: 'center',

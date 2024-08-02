@@ -84,7 +84,7 @@ export default function LoginScreen() {
   return (
     <View style={styles.container}>
 
-        <Image source={require('../assets/navigator_icon_grey.png')} style={styles.image} />
+        <Image source={require('../assets/flogo.png')} style={styles.image} />
     
       <Text style={styles.title}>Welcome Back</Text>
       <Text style={styles.subtitle}>Please enter your PIN to continue</Text>
@@ -112,7 +112,7 @@ export default function LoginScreen() {
       </TouchableOpacity>
       <View style={styles.fingerprintContainer}>
         <TouchableOpacity style={styles.fingerprintButton} onPress={authenticateWithFingerprint}>
-          <Ionicons name="finger-print-sharp" size={24} color="#c0c0c0" />
+          <Ionicons name="finger-print-sharp" size={24} color="#FEBF32" />
           <Text style={styles.fingerprintButtonText}>Use Fingerprint</Text>
         </TouchableOpacity>
       </View>
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#c0c0c0',
+    color: '#FEBF32',
     marginBottom: 10,
   },
   subtitle: {
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     padding: 15,
     alignItems: 'center',
     borderRadius: 8,
-    backgroundColor: '#c0c0c0',
+    backgroundColor: '#FEBF32',
     marginTop: 20,
     opacity: 1,
   },
@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#c0c0c0',
+    color: '#FEBF32',
     marginBottom: 10,
   },
   modalText: {

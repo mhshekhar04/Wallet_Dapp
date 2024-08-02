@@ -43,11 +43,13 @@ import Discover from './components/Discover';
 import WebViewScreen from './components/WebViewScreen';
 import YourWallet from './components/YourWallet';
 import Lock from './components/Lock';
+import Swap from './components/Swap';
 
 import '@ethersproject/shims';
 import 'react-native-get-random-values';
 import {AccountsProvider} from './components/AccountsContext';
 import History from './components/History';
+
 // import WalletContextProvider from './components/WalletContextProvider';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 // import Web3Provider from './components/Web3Provider';
@@ -64,19 +66,11 @@ const App: React.FC = (): React.ReactElement | null => {
   useEffect(() => {
     const checkPassword = async () => {
       try {
-<<<<<<< Updated upstream
         const password = await RNSecureStorage.getItem('Password');
         const fingerprint = await RNSecureStorage.getItem('userFingerprint');
         const pin = await RNSecureStorage.getItem('userPin');
-=======
-        const password = await RNSecureStorage.getItem('newPassword');
->>>>>>> Stashed changes
         console.log('Password:', password); // Log password for debugging
-        const seed = await RNSecureStorage.getItem('seedPhraseVerified');
-        const fingerprint = await RNSecureStorage.getItem('userFingerprint');
-        const pin = await RNSecureStorage.getItem('userPin');
 
-<<<<<<< Updated upstream
         // if (password) {
         //   if(pin ||fingerprint)
         //      {
@@ -89,9 +83,6 @@ const App: React.FC = (): React.ReactElement | null => {
         // }
         if(password)
         {
-=======
-        if (password && seed && fingerprint && pin) {
->>>>>>> Stashed changes
           setInitialRoute('MainPage');
         }
         else {
@@ -254,89 +245,94 @@ const App: React.FC = (): React.ReactElement | null => {
             options={{headerShown: false}}
           />
 
-          <Stack.Screen
-            name="TokenSentToFrom"
-            component={TokenSentToFrom}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="TokenAmount"
-            component={TokenAmount}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="TransactionSuccess"
-            component={TransactionSuccess}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="Wallet"
-            component={Wallet}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="NewWalletImport"
-            component={NewWalletImport}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="TransferNFT"
-            component={TransferNFT}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="TransferToken"
-            component={TransferToken}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="TokenTransferDetails"
-            component={TokenTransferDetails}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="AddCollectibles"
-            component={AddCollectibles}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="Recieve"
-            component={Recieve}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="Scanner"
-            component={Scanner}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="ImportAccount"
-            component={ImportAccount}
-            options={{headerShown: false}}
-          />
+        <Stack.Screen
+          name="TokenSentToFrom"
+          component={TokenSentToFrom}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="TokenAmount"
+          component={TokenAmount}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="TransactionSuccess"
+          component={TransactionSuccess}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Wallet"
+          component={Wallet}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="NewWalletImport"
+          component={NewWalletImport}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="TransferNFT"
+          component={TransferNFT}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="TransferToken"
+          component={TransferToken}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="TokenTransferDetails"
+          component={TokenTransferDetails}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="AddCollectibles"
+          component={AddCollectibles}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Recieve"
+          component={Recieve}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Scanner"
+          component={Scanner}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ImportAccount"
+          component={ImportAccount}
+          options={{headerShown: false}}
+        />
+
+        <Stack.Screen
+          name="Profile"
+          component={Profile}
+          options={{headerShown: false}}
+        />
 
           <Stack.Screen
-            name="Profile"
-            component={Profile}
-            options={{headerShown: false}}
-          />
-
+          name="Discover"
+          component={Discover}
+          options={{headerShown: false}}
+        />
           <Stack.Screen
-            name="Discover"
-            component={Discover}
-            options={{headerShown: false}}
-          />
+          name="WebViewScreen"
+          component={WebViewScreen}
+          options={{headerShown: false}}
+        />
           <Stack.Screen
-            name="WebViewScreen"
-            component={WebViewScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="YourWallet"
-            component={YourWallet}
-            options={{headerShown: false}}
-          />
-        </Stack.Navigator>
+          name="Swap"
+          component={Swap}
+          options={{headerShown: false}}
+        />
+         <Stack.Screen
+          name="YourWallet"
+          component={YourWallet}
+          options={{headerShown: false}}
+        />
+      </Stack.Navigator>
       </AccountsProvider>
     </NavigationContainer>
     // </Web3Provider>

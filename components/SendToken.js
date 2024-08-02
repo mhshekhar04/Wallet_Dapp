@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   headerText: {
-    color: '#c0c0c0',
+    color: '#FEBF32',
     textAlign: 'center',
     fontFamily: 'Poppins',
     fontSize: 20,
@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   sendButton: {
-    backgroundColor: '#c0c0c0',
+    backgroundColor: '#FEBF32',
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
@@ -312,14 +312,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   selectedAccountText: {
-    color: '#c0c0c0',
+    color: '#FEBF32',
     fontWeight: 'bold',
   },
   
   selectedAccountContainer: {
     backgroundColor: '#3B3F4A',
     borderWidth: 2,
-    borderColor: '#c0c0c0',
+    borderColor: '#FEBF32',
   },
   
 });

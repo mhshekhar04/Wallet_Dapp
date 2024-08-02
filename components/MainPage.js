@@ -17,6 +17,7 @@ import SecureStorage from 'rn-secure-storage';
 import { AccountsContext } from './AccountsContext';
 import Navigation from './Navigation';
 import Svg, { Circle, Text as SvgText } from 'react-native-svg';
+import coreImage from '../assets/coreImage1.png'
 
 export default function MainPage({ navigation, route }) {
   const { accounts, generateNewAccounts, addAccount } = useContext(AccountsContext);
@@ -32,7 +33,7 @@ export default function MainPage({ navigation, route }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editAccountName, setEditAccountName] = useState('');
   const [editAccountIndex, setEditAccountIndex] = useState(-1);
-
+  const [newNetworkChainId, setNewNetworkChainId] = useState('');
   const [showNetworkModal, setShowNetworkModal] = useState(false);
   const [showAddNetworkModal, setShowAddNetworkModal] = useState(false);
   const [newNetworkName, setNewNetworkName] = useState('');
@@ -190,6 +191,24 @@ export default function MainPage({ navigation, route }) {
   ];
 
   const networks = [
+
+    {
+      name: 'Core Mainnet',
+      networkurl:
+        'https://rpc.coredao.org/',
+      suffix: 'Core',
+      img: coreImage,
+      chainId:'0x45C'
+    },
+    {
+      name: 'Core Testnet',
+      networkurl:
+        'https://rpc.test.btcs.network/',
+      suffix: 'Core',
+      img: coreImage,
+      chainId:'0x45C'
+
+    },
     {
       name: 'Sepolia',
       networkurl: 'https://sepolia.infura.io/v3/215d4e9d78b5430fb64f66b61d84c1e9',
@@ -216,7 +235,7 @@ export default function MainPage({ navigation, route }) {
     },
     {
       name: 'BNB Chain Mainnet',
-      networkurl: 'https://bsc-dataseed.binance.org/',
+      networkurl: 'https://bsc-dataseed1.binance.org',
       suffix: 'BNB',
       chainId: '0x38',
     },
@@ -226,6 +245,13 @@ export default function MainPage({ navigation, route }) {
       suffix: 'BNB',
       chainId: '0x61',
     },
+    {
+      "name": "Polygon zkEVM",
+      "networkurl": "https://zkevm-rpc.com",
+      "suffix": "ETH",
+      "chainId": "0x44d"
+    }
+    
   ];
 
   // console.log('tokens === ',tokens);
@@ -273,10 +299,12 @@ export default function MainPage({ navigation, route }) {
             filteredTokens.map(async (token) => {
               try {
                 const contract = new ethers.Contract(token?.address, abi, provider);
-                const balance = await contract.balanceOf(selectedAccount?.address);
+                const balance = await contract.balanceOf
+                (selectedAccount?.address);
+                const decimal = await contract.decimals();
                 return {
                   ...token,
-                  balance: ethers.utils.formatUnits(balance, token.decimals || 18),
+                  balance: parseFloat(ethers.utils.formatUnits(balance, decimal || 18)).toFixed(4),
                 };
               } catch (error) {
                 console.error('Error fetching token balance:', error);
@@ -326,7 +354,7 @@ export default function MainPage({ navigation, route }) {
           setCollectibles(collectibleBalances);
         }
       } catch (error) {
-        console.error('Error fetching Collectibles:', error);
+        
       }
     };
 
@@ -448,11 +476,15 @@ export default function MainPage({ navigation, route }) {
       Alert.alert('Error', 'Invalid RPC URL');
       return;
     }
-
+  
+    // Convert the chain ID to hexadecimal format
+    const chainIdHex = `0x${parseInt(newNetworkChainId, 10).toString(16)}`;
+  
     const newNetwork = {
       name: newNetworkName,
       networkurl: newNetworkUrl,
       suffix: newNetworkSuffix,
+      chainId: chainIdHex,
     };
     const updatedNetworks = [...networks, newNetwork];
     setNetworks(updatedNetworks);
@@ -461,7 +493,9 @@ export default function MainPage({ navigation, route }) {
     setNewNetworkName('');
     setNewNetworkUrl('');
     setNewNetworkSuffix('');
+    setNewNetworkChainId(''); // Reset the chain ID input
   };
+  
 
   const onTokenSendClick = (token) => {
     navigation.navigate('SendToken', {
@@ -546,41 +580,63 @@ export default function MainPage({ navigation, route }) {
         </TouchableOpacity>
 
         <View style={styles.balanceTextWrapper}>
-          <Text style={styles.balanceText}>
-            {balance && !isNaN(parseFloat(balance))
-              ? parseFloat(balance).toFixed(4)
-              : '0.0000'}{' '}
-            {selectedNetwork?.suffix}
-          </Text>
-        </View>
+        <Text style={styles.balanceText}>
+          {balance && !isNaN(parseFloat(balance))
+            ? parseFloat(balance).toFixed(4)
+            : '0.0000'}
+            {' '}
+          {selectedNetwork?.suffix}
+          {
+  selectedNetwork?.suffix === 'Core' && (
+    <Image source={coreImage} alt='Core Image' style={styles.coreImage}  />
+  )
+}
+
+        </Text>
+      </View>
 
         <View style={styles.buttonRow}>
-          <TouchableOpacity
-            style={styles.actionButton}
-            onPress={() =>
-              navigation.navigate('SendToken', {
-                selectedAccount,
-                accounts,
-                selectedNetwork,
-              })
-            }
-          >
-            <FontAwesome name="arrow-up" size={24} color="#c0c0c0" />
-            <Text style={styles.buttonText}>Send</Text>
-          </TouchableOpacity>
+  <TouchableOpacity
+    style={styles.actionButton}
+    onPress={() =>
+      navigation.navigate('SendToken', {
+        selectedAccount,
+        accounts,
+        selectedNetwork,
+      })
+    }
+  >
+    <FontAwesome name="arrow-up" size={24} color="#FEBF32" />
+    <Text style={styles.buttonText}>Send</Text>
+  </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.actionButton}
-            onPress={() =>
-              navigation.navigate('Recieve', {
-                selectedAccount,
-              })
-            }
-          >
-            <FontAwesome name="arrow-down" size={24} color="#c0c0c0" />
-            <Text style={styles.buttonText}>Receive</Text>
-          </TouchableOpacity>
-        </View>
+  <TouchableOpacity
+    style={styles.actionButton}
+    onPress={() =>
+      navigation.navigate('Recieve', {
+        selectedAccount,
+      })
+    }
+  >
+    <FontAwesome name="arrow-down" size={24} color="#FEBF32" />
+    <Text style={styles.buttonText}>Receive</Text>
+  </TouchableOpacity>
+
+  <TouchableOpacity
+    style={styles.actionButton}
+    onPress={() =>
+      navigation.navigate('Swap', {
+        selectedAccount,
+        accounts,
+        selectedNetwork,
+      })
+    }
+  >
+    <FontAwesome name="exchange" size={24} color="#FEBF32" />
+    <Text style={styles.buttonText}>Swap</Text>
+  </TouchableOpacity>
+</View>
+
 
         <View style={styles.tabContainer}>
           <TouchableOpacity
@@ -608,7 +664,7 @@ export default function MainPage({ navigation, route }) {
                     <Feather
                       name="arrow-up-right"
                       size={30}
-                      color="#c0c0c0"
+                      color="#FEBF32"
                       onPress={() => onTokenSendClick(token)}
                     />
                     {typeof token.image === 'string' &&
@@ -636,7 +692,7 @@ export default function MainPage({ navigation, route }) {
                   navigation.navigate('AddToken', { selectedNetwork })
                 }
               >
-                <FontAwesome name="plus" size={16} color="#c0c0c0" />
+                <FontAwesome name="plus" size={16} color="#FEBF32" />
                 <Text style={styles.addButtonText}>Add Tokens</Text>
               </TouchableOpacity>
             </View>
@@ -650,7 +706,7 @@ export default function MainPage({ navigation, route }) {
                     <Feather
                       name="arrow-up-right"
                       size={30}
-                      color="#c0c0c0"
+                      color="#FEBF32"
                       onPress={() => onNFTSendClick(collectible)}
                     />
                     <View style={styles.tokenInfo}>
@@ -667,7 +723,7 @@ export default function MainPage({ navigation, route }) {
                   navigation.navigate('AddCollectibles', { selectedNetwork })
                 }
               >
-                <FontAwesome name="plus" size={16} color="#c0c0c0" />
+                <FontAwesome name="plus" size={16} color="#FEBF32" />
                 <Text style={styles.addButtonText}>Add Collectibles</Text>
               </TouchableOpacity>
             </View>
@@ -803,7 +859,7 @@ export default function MainPage({ navigation, route }) {
                 style={styles.addButton}
                 onPress={() => setShowAddNetworkModal(true)}
               >
-                <FontAwesome name="plus" size={16} color="#c0c0c0" />
+                <FontAwesome name="plus" size={16} color="#FEBF32" />
                 <Text style={styles.addButtonText}>Add Network</Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -816,45 +872,45 @@ export default function MainPage({ navigation, route }) {
           </View>
         </Modal>
 
-        <Modal
-          visible={showAddNetworkModal}
-          animationType="slide"
-          transparent={true}
-          onRequestClose={() => setShowAddNetworkModal(false)}
-        >
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-              <Text style={styles.modalTitle}>Add Network</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Network Name"
-                value={newNetworkName}
-                onChangeText={setNewNetworkName}
-              />
-              <TextInput
-                style={styles.input}
-                placeholder="Network URL (RPC)"
-                value={newNetworkUrl}
-                onChangeText={setNewNetworkUrl}
-              />
-              <TextInput
-                style={styles.input}
-                placeholder="Currency Symbol"
-                value={newNetworkSuffix}
-                onChangeText={setNewNetworkSuffix}
-              />
-              <TouchableOpacity style={styles.createButton} onPress={handleAddNetwork}>
-                <Text style={styles.createButtonText}>Add Network</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.closeButton}
-                onPress={() => setShowAddNetworkModal(false)}
-              >
-                <Text style={styles.closeButtonText}>Close</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
+        <Modal visible={showAddNetworkModal} animationType="slide" transparent={true} onRequestClose={() => setShowAddNetworkModal(false)}>
+  <View style={styles.modalContainer}>
+    <View style={styles.modalContent}>
+      <Text style={styles.modalTitle}>Add Network</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Network Name"
+        value={newNetworkName}
+        onChangeText={setNewNetworkName}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="RPC URL"
+        value={newNetworkUrl}
+        onChangeText={setNewNetworkUrl}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Currency Symbol"
+        value={newNetworkSuffix}
+        onChangeText={setNewNetworkSuffix}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Chain ID"
+        value={newNetworkChainId}
+        onChangeText={setNewNetworkChainId}
+        keyboardType="numeric" // Ensures only numeric input
+      />
+      <TouchableOpacity style={styles.createButton} onPress={handleAddNetwork}>
+        <Text style={styles.createButtonText}>Add Network</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.closeButton} onPress={() => setShowAddNetworkModal(false)}>
+        <Text style={styles.closeButtonText}>Close</Text>
+      </TouchableOpacity>
+    </View>
+  </View>
+</Modal>
+
 
       </View>
       <Navigation selectedAccount={selectedAccount} selectedNetwork={selectedNetwork} />
@@ -1107,7 +1163,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   createButton: {
-    backgroundColor: '#c0c0c0',
+    backgroundColor: '#FEBF32',
     borderRadius: 20,
     paddingVertical: 10,
     paddingHorizontal: 20,
@@ -1370,7 +1426,7 @@ const styles = StyleSheet.create({
 //     width: '100%',
 //   },
 //   createButton: {
-//     backgroundColor: '#c0c0c0',
+//     backgroundColor: '#FEBF32',
 //     borderRadius: 20,
 //     paddingVertical: 10,
 //     paddingHorizontal: 20,
@@ -2050,7 +2106,7 @@ const styles = StyleSheet.create({
 //               selectedNetwork,
 //             })
 //           }>
-//           <FontAwesome name="arrow-up" size={24} color="#c0c0c0" />
+//           <FontAwesome name="arrow-up" size={24} color="#FEBF32" />
 //           <Text style={styles.buttonText}>Send</Text>
 //         </TouchableOpacity>
 
@@ -2061,14 +2117,14 @@ const styles = StyleSheet.create({
 //               selectedAccount,
 //             })
 //           }>
-//           <FontAwesome name="arrow-down" size={24} color="#c0c0c0" />
+//           <FontAwesome name="arrow-down" size={24} color="#FEBF32" />
 //           <Text style={styles.buttonText}>Receive</Text>
 //         </TouchableOpacity>
 
 //         <TouchableOpacity
 //           style={styles.actionButton}
 //           onPress={() => navigation.navigate('Discover', {selectedAccount})}>
-//           <Compass name="compass" size={24} color="#c0c0c0" />
+//           <Compass name="compass" size={24} color="#FEBF32" />
 //           <Text style={styles.buttonText}>Discover</Text>
 //         </TouchableOpacity>
 //       </View>
@@ -2097,7 +2153,7 @@ const styles = StyleSheet.create({
 //                   <Feather
 //                     name="arrow-up-right"
 //                     size={30}
-//                     color="#c0c0c0"
+//                     color="#FEBF32"
 //                     onPress={() => onTokenSendClick(token)}
 //                   />
 //                   <View style={styles.tokenInfo}>
@@ -2113,7 +2169,7 @@ const styles = StyleSheet.create({
 //               onPress={() =>
 //                 navigation.navigate('AddToken', {selectedNetwork})
 //               }>
-//               <FontAwesome name="plus" size={16} color="#c0c0c0" />
+//               <FontAwesome name="plus" size={16} color="#FEBF32" />
 //               <Text style={styles.addButtonText}>Add Tokens</Text>
 //             </TouchableOpacity>
 //           </View>
@@ -2127,7 +2183,7 @@ const styles = StyleSheet.create({
 //                   <Feather
 //                     name="arrow-up-right"
 //                     size={30}
-//                     color="#c0c0c0"
+//                     color="#FEBF32"
 //                     onPress={() => onNFTSendClick(collectible)}
 //                   />
 //                   <View style={styles.tokenInfo}>
@@ -2143,7 +2199,7 @@ const styles = StyleSheet.create({
 //               onPress={() =>
 //                 navigation.navigate('AddCollectibles', {selectedNetwork})
 //               }>
-//               <FontAwesome name="plus" size={16} color="#c0c0c0" />
+//               <FontAwesome name="plus" size={16} color="#FEBF32" />
 //               <Text style={styles.addButtonText}>Add Collectibles</Text>
 //             </TouchableOpacity>
 //             {/* <TouchableOpacity
@@ -2464,7 +2520,7 @@ const styles = StyleSheet.create({
 //     width: '100%',
 //   },
 //   createButton: {
-//     backgroundColor: '#c0c0c0',
+//     backgroundColor: '#FEBF32',
 //     borderRadius: 20,
 //     paddingVertical: 10,
 //     paddingHorizontal: 20,
@@ -2687,7 +2743,7 @@ const styles = StyleSheet.create({
 // //     width: '100%',
 // //   },
 // //   createButton: {
-// //     backgroundColor: '#c0c0c0',
+// //     backgroundColor: '#FEBF32',
 // //     borderRadius: 20,
 // //     paddingVertical: 10,
 // //     paddingHorizontal: 20,

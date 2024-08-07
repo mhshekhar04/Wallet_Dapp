@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { randomBytes } from 'react-native-randombytes';
 import { ethers } from 'ethers';
+import RNSecureStorage, { ACCESSIBLE } from 'rn-secure-storage';
 import LottieView from 'lottie-react-native';
 
 const NoteDownSeed = ({ navigation }) => {
@@ -44,7 +45,6 @@ const NoteDownSeed = ({ navigation }) => {
   // };
   const generateSeedPhrase = async () => {
     try {
-      console.time('Generate Random Bytes');
       // Generate secure random bytes
       const randomBytesArray = await new Promise((resolve, reject) => {
         randomBytes(16, (err, bytes) => {
@@ -52,25 +52,6 @@ const NoteDownSeed = ({ navigation }) => {
           else resolve(bytes);
         });
       });
-<<<<<<< Updated upstream
-      console.timeEnd('Generate Random Bytes');
-      console.log('Random Bytes:', randomBytesArray);
-
-      console.time('Generate Mnemonic');
-      // Use ethers.js to generate mnemonic from random bytes
-      const mnemonic = ethers.Wallet.fromMnemonic(
-        ethers.utils.entropyToMnemonic(randomBytesArray),
-      ).mnemonic.phrase;
-      console.timeEnd('Generate Mnemonic');
-      console.log('Mnemonic:', mnemonic);
-
-      console.time('Split Mnemonic into Words');
-      const newSeedPhrase = mnemonic.split(' ');
-      console.timeEnd('Split Mnemonic into Words');
-      console.log('Seed Phrase:', newSeedPhrase);
-
-      setSeedPhrase(newSeedPhrase);
-=======
   
       // Use ethers.js to generate mnemonic directly from random bytes
       const mnemonic = ethers.utils.entropyToMnemonic(randomBytesArray);
@@ -79,7 +60,6 @@ const NoteDownSeed = ({ navigation }) => {
       setSeedPhrase(newSeedPhrase);
       console.log('Shadab Seed Phrase', newSeedPhrase);
   
->>>>>>> Stashed changes
       setLoading(false); // Set loading to false once seed phrase is generated
     } catch (error) {
       console.error('Error generating seed phrase:', error);
@@ -87,6 +67,7 @@ const NoteDownSeed = ({ navigation }) => {
   };
 
   const handleNext = () => {
+    // navigation.navigate('ConfirmSeedPhrase', {seedPhrase});
     navigation.replace('ConfirmSeedPhrase', { seedPhrase });
   };
 
@@ -107,7 +88,7 @@ const NoteDownSeed = ({ navigation }) => {
         <>
           <ActivityIndicator
             size="large"
-            color="#FEBF32"
+            color="#c0c0c0"
             style={styles.loadingIndicator}
           />
           <Text style={{ color: 'white' }}>
@@ -147,71 +128,87 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#17171A',
     alignItems: 'center',
-    paddingVertical: 50,
+    paddingTop: 44,
     paddingHorizontal: 20,
   },
   rectanglesContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    height: 8,
     width: '100%',
-    marginBottom: 20,
+    paddingHorizontal: 16,
+    marginBottom: 16,
   },
   rectangle: {
-    width: '30%',
-    height: 4,
-    backgroundColor: '#FEBF32',
+    flex: 1,
+    height: 8,
+    borderRadius: 2,
+    backgroundColor: '#222531',
+    marginHorizontal: 2,
   },
   title: {
-    fontFamily: 'Poppins_600SemiBold',
-    fontSize: 24,
-    lineHeight: 36,
-    color: '#FEBF32',
-    marginVertical: 20,
+    fontFamily: 'Poppins',
+    fontSize: 18,
+    fontWeight: '600',
+    lineHeight: 28,
     textAlign: 'center',
+    color: '#FFF',
+    marginBottom: 16,
   },
   description: {
-    color: '#ABAFC4',
-    fontFamily: 'Poppins_400Regular',
+    width: '100%',
     fontSize: 14,
     lineHeight: 24,
-    marginBottom: 20,
     textAlign: 'center',
-  },
-  loadingIndicator: {
-    marginVertical: 20,
-  },
-  lottie: {
-    width: 150,
-    height: 150,
+    color: '#ABAFC4',
+    marginBottom: 16,
   },
   seedPhraseContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    marginVertical: 20,
+    width: '100%',
+    marginBottom: 16,
   },
   seedPhraseBox: {
-    backgroundColor: '#2A2D3C',
+    width: '48%',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    backgroundColor: '#222531',
     borderRadius: 8,
-    padding: 10,
-    margin: 5,
+    marginVertical: 8,
   },
   seedPhraseText: {
     color: '#FFF',
-    fontFamily: 'Poppins_400Regular',
+    fontFamily: 'Poppins',
     fontSize: 14,
+    fontWeight: '400',
+    lineHeight: 24,
+    textAlign: 'center',
+  },
+  loadingIndicator: {
+    marginTop: 20,
+  },
+  lottie: {
+    width: 200,
+    height: 200,
+    marginBottom: 20,
   },
   button: {
-    backgroundColor: '#FEBF32',
-    borderRadius: 8,
+    width: '100%',
     paddingVertical: 12,
-    paddingHorizontal: 24,
-    marginVertical: 20,
+    paddingHorizontal: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#c0c0c0',
+    borderRadius: 8,
   },
   buttonText: {
-    color: '#17171A',
-    fontFamily: 'Poppins_600SemiBold',
+    fontFamily: 'Poppins',
     fontSize: 16,
+    fontWeight: '600',
+    lineHeight: 24,
+    color: '#000',
+    textAlign: 'center',
   },
 });
 

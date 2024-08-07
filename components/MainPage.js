@@ -18,6 +18,10 @@ import { AccountsContext } from './AccountsContext';
 import Navigation from './Navigation';
 import Svg, { Circle, Text as SvgText } from 'react-native-svg';
 import coreImage from '../assets/coreImage1.png'
+import ethImage from '../assets/etheriumm.png'  
+import maticImage from '../assets/Polygonn.png'  
+import bnbImage from '../assets/bnb.png'  
+
 
 export default function MainPage({ navigation, route }) {
   const { accounts, generateNewAccounts, addAccount } = useContext(AccountsContext);
@@ -200,21 +204,21 @@ export default function MainPage({ navigation, route }) {
       img: coreImage,
       chainId:'0x45C'
     },
-    {
-      name: 'Core Testnet',
-      networkurl:
-        'https://rpc.test.btcs.network/',
-      suffix: 'Core',
-      img: coreImage,
-      chainId:'0x45C'
+    // {
+    //   name: 'Core Testnet',
+    //   networkurl:
+    //     'https://rpc.test.btcs.network/',
+    //   suffix: 'Core',
+    //   img: coreImage,
+    //   chainId:'0x45C'
 
-    },
-    {
-      name: 'Sepolia',
-      networkurl: 'https://sepolia.infura.io/v3/215d4e9d78b5430fb64f66b61d84c1e9',
-      suffix: 'ETH',
-      chainId: '0xaa36a7',
-    },
+    // },
+    // {
+    //   name: 'Sepolia',
+    //   networkurl: 'https://sepolia.infura.io/v3/215d4e9d78b5430fb64f66b61d84c1e9',
+    //   suffix: 'ETH',
+    //   chainId: '0xaa36a7',
+    // },
     {
       name: 'Ethereum Mainnet',
       networkurl: 'https://mainnet.infura.io/v3/215d4e9d78b5430fb64f66b61d84c1e9',
@@ -227,30 +231,30 @@ export default function MainPage({ navigation, route }) {
       suffix: 'MATIC',
       chainId: '0x89',
     },
-    {
-      name: 'Amoy',
-      networkurl: 'https://polygon-amoy.infura.io/v3/215d4e9d78b5430fb64f66b61d84c1e9',
-      suffix: 'MATIC',
-      chainId: '0x89',
-    },
+    // {
+    //   name: 'Amoy',
+    //   networkurl: 'https://polygon-amoy.infura.io/v3/215d4e9d78b5430fb64f66b61d84c1e9',
+    //   suffix: 'MATIC',
+    //   chainId: '0x89',
+    // },
     {
       name: 'BNB Chain Mainnet',
       networkurl: 'https://bsc-dataseed1.binance.org',
       suffix: 'BNB',
       chainId: '0x38',
     },
-    {
-      name: 'BNB testnet',
-      networkurl: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
-      suffix: 'BNB',
-      chainId: '0x61',
-    },
-    {
-      "name": "Polygon zkEVM",
-      "networkurl": "https://zkevm-rpc.com",
-      "suffix": "ETH",
-      "chainId": "0x44d"
-    }
+    // {
+    //   name: 'BNB testnet',
+    //   networkurl: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
+    //   suffix: 'BNB',
+    //   chainId: '0x61',
+    // },
+    // {
+    //   "name": "Polygon zkEVM",
+    //   "networkurl": "https://zkevm-rpc.com",
+    //   "suffix": "ETH",
+    //   "chainId": "0x44d"
+    // }
     
   ];
 
@@ -578,22 +582,27 @@ export default function MainPage({ navigation, route }) {
           </Text>
           <FontAwesome name="chevron-down" size={12} color="#FFF" />
         </TouchableOpacity>
-
-        <View style={styles.balanceTextWrapper}>
-        <Text style={styles.balanceText}>
-          {balance && !isNaN(parseFloat(balance))
-            ? parseFloat(balance).toFixed(4)
-            : '0.0000'}
-            {' '}
-          {selectedNetwork?.suffix}
-          {
-  selectedNetwork?.suffix === 'Core' && (
-    <Image source={coreImage} alt='Core Image' style={styles.coreImage}  />
-  )
-}
-
-        </Text>
-      </View>
+       <View style={styles.balanceImg}>
+  {selectedNetwork?.suffix === 'Core' && (
+    <Image source={coreImage} style={styles.coreImage} />
+  )}
+  {selectedNetwork?.suffix === 'BNB' && (
+    <Image source={bnbImage} style={styles.coreImage} />
+  )}
+  {selectedNetwork?.suffix === 'ETH' && (
+    <Image source={ethImage} style={styles.coreImage} />
+  )}
+  {selectedNetwork?.suffix === 'MATIC' && (
+    <Image source={maticImage} style={styles.coreImage} />
+  )}
+  
+  <Text style={styles.balanceText}>
+    {balance && !isNaN(parseFloat(balance))
+      ? parseFloat(balance).toFixed(4)
+      : '0.0000'}{' '}
+    {selectedNetwork?.suffix}
+  </Text>
+</View>
 
         <View style={styles.buttonRow}>
   <TouchableOpacity
@@ -879,24 +888,28 @@ export default function MainPage({ navigation, route }) {
       <TextInput
         style={styles.input}
         placeholder="Network Name"
+        placeholderTextColor="#FFF"
         value={newNetworkName}
         onChangeText={setNewNetworkName}
       />
       <TextInput
         style={styles.input}
         placeholder="RPC URL"
+        placeholderTextColor="#FFF"
         value={newNetworkUrl}
         onChangeText={setNewNetworkUrl}
       />
       <TextInput
         style={styles.input}
         placeholder="Currency Symbol"
+        placeholderTextColor="#FFF"
         value={newNetworkSuffix}
         onChangeText={setNewNetworkSuffix}
       />
       <TextInput
         style={styles.input}
         placeholder="Chain ID"
+        placeholderTextColor="#FFF"
         value={newNetworkChainId}
         onChangeText={setNewNetworkChainId}
         keyboardType="numeric" // Ensures only numeric input
@@ -995,8 +1008,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: -40,
     alignSelf: 'center',
+    marginBottom: 80,
+    marginRight:30
   },
   accountButtonText: {
     color: '#FFF',
@@ -1012,12 +1027,15 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins',
     fontSize: 40,
     fontStyle: 'normal',
-    marginLeft: 20,
+    marginLeft: 5,
     fontWeight: '300',
     lineHeight: 56,
     backgroundClip: 'text',
     WebkitBackgroundClip: 'text',
     WebkitTextFillColor: 'transparent',
+  },
+  balanceImg :{
+     alignItems:'center'
   },
   buttonRow: {
     flexDirection: 'row',
@@ -1041,6 +1059,7 @@ const styles = StyleSheet.create({
     gap: 8,
     borderRadius: 8,
     backgroundColor: '#333',
+    width:70
   },
   buttonText: {
     color: '#FFF',
@@ -1099,6 +1118,8 @@ const styles = StyleSheet.create({
     width: 35,
     height: 35,
     marginLeft: 5,
+
+
   },
   addButton: {
     flexDirection: 'row',

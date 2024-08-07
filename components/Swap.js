@@ -87,19 +87,25 @@ const SwapPage = ({ navigation, route }) => {
 
   const fetchToTokens = async () => {
     try {
-      const response = await fetch('https://api.coingecko.com/api/v3/coins/list');
+      const response = await fetch(
+        'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1'
+      );
       const data = await response.json();
-      const topTokens = data.slice(0, 500).map(token => ({
+  
+      const topTokens = data.map((token) => ({
         symbol: token.symbol.toUpperCase(),
         name: token.name,
-        address: token.id,
+        address: token.id, // CoinGecko uses IDs instead of addresses for their endpoint
+        image: token.image, // Adding image URL for better display
       }));
+  
       setToTokensList(topTokens);
-      setToToken(topTokens[0]);
+      setToToken(topTokens[0]); // Set the default to the first token in the list
     } catch (error) {
       console.error('Error fetching tokens from API:', error);
     }
   };
+  
 
   const apiRequestUrl = (chainId, src, dst, amount, slippage, from) => {
     return `${AGGREGATOR_API_BASE}/${chainId}?src=${src}&dst=${dst}&amount=${amount}&slippage=${slippage}&from=${from}`;
@@ -111,32 +117,41 @@ const SwapPage = ({ navigation, route }) => {
         Alert.alert('Error', 'Please select tokens and enter the amount to swap.');
         return null;
       }
-
+    
       const fromTokenAddress = fromToken.address;
       const toTokenAddress = toToken.address;
-      const amountIn = ethers.utils.parseUnits(amount, fromToken.decimals).toString();
+      const contract = new ethers.Contract(fromToken.address, abi, signer);
+      const decimal = await contract.decimals();
+      const amountIn = ethers.utils.parseUnits(amount, decimal).toString();
       const fromAddress = selectedAccount.address;
       const chainId = parseInt(selectedNetwork.chainId, 16);
-
+  
       const url = apiRequestUrl(chainId, fromTokenAddress, toTokenAddress, amountIn, slippage, fromAddress);
       console.log(url);
-
+  
       const response = await fetch(url);
       const responseText = await response.text();
       if (!response.ok) {
         throw new Error(responseText);
       }
-
+  
       const data = JSON.parse(responseText);
       fromToken.allowanceTarget = data.allowanceTarget;
-
+  
       return data;
     } catch (error) {
       console.error('Error fetching swap quote:', error);
-      Alert.alert('Error', `Failed to fetch swap quote: ${error.message}`);
+  
+      if (error.message.includes('Internal Server Error')) {
+        Alert.alert('Error', 'Something went wrong. Please check if your token is available on the current chain.');
+      } else {
+        Alert.alert('Error', `Failed to fetch swap quote: ${error.message}`);
+      }
+      setIsSwapping(false);
       return null;
     }
   };
+  
 
   const handleTokenAddressChange = async (address) => {
     setTokenAddress(address);
@@ -183,34 +198,40 @@ const SwapPage = ({ navigation, route }) => {
         Alert.alert('Error', 'Please select tokens and enter the amount to swap.');
         return;
       }
-
+  
       console.log('Tokens and amount selected:', { fromToken, toToken, amount });
-
-      const amountInWei = ethers.utils.parseUnits(amount, fromToken.decimals);
+     
+      const contract = new ethers.Contract(fromToken.address, abi, signer);
+      const decimal = await contract.decimals();
+      console.log('decimal---', decimal);
+      const amountInWei = ethers.utils.parseUnits(amount, decimal);
       console.log('Amount in Wei:', amountInWei.toString());
       
-
-      const balance = await provider.getBalance(selectedAccount.address);
-      console.log('Account balance:', ethers.utils.formatEther(balance));
-
-      if (balance.lt(amountInWei)) {
-        Alert.alert('Error', 'Insufficient ETH balance to perform the swap.');
+      // Check for token balance
+      const tokenBalance = await contract.balanceOf(selectedAccount.address);
+      console.log('Token balance:', tokenBalance.toString());
+      if (tokenBalance.lt(amountInWei)) {
+        Alert.alert('Error', `Insufficient ${fromToken.symbol} balance to perform the swap.`);
         return;
       }
-
+  
+      const ethBalance = await provider.getBalance(selectedAccount.address);
+      console.log('ETH balance:', ethers.utils.formatEther(ethBalance));
+  
       setIsSwapping(true);
       const quote = await getSwapQuote();
       if (!quote) return;
-
+  
       const spenderAddress = quote.tx.to;
       console.log('Spender address:', spenderAddress);
-
-      const contract = new ethers.Contract(fromToken.address, abi, signer);
+  
       const currentAllowance = await contract.allowance(selectedAccount.address, spenderAddress);
       console.log('Current allowance:', currentAllowance.toString());
-
+  
       if (currentAllowance.lt(amountInWei)) {
         console.log('Approving token for swap...');
+        // const gasLimit = await contract.estimateGas.approve(spenderAddress, amountInWei);
+        // const approvalTx = await contract.approve(spenderAddress, amountInWei, { gasLimit });
         const approvalTx = await contract.approve(spenderAddress, amountInWei);
         console.log('Approval transaction sent:', approvalTx.hash);
         await approvalTx.wait();
@@ -218,24 +239,24 @@ const SwapPage = ({ navigation, route }) => {
       } else {
         console.log('Sufficient allowance, no need to approve');
       }
-
+  
       const gasEstimate = await provider.estimateGas({
         to: quote.tx.to,
         data: quote.tx.data,
-        value: quote.tx.value ? ethers.BigNumber.from(quote.tx.value) : ethers.BigNumber.from(0),
+        value: '0x0',
         from: selectedAccount.address
       });
       console.log('Estimated gas limit:', gasEstimate.toString());
-
+  
       const gasPrice = await provider.getGasPrice();
       console.log('Current gas price:', ethers.utils.formatUnits(gasPrice, 'gwei'), 'gwei');
-
+  
       const transactionCost = gasEstimate.mul(gasPrice);
-      if (balance.lt(transactionCost.add(amountInWei))) {
-        Alert.alert('Error', 'Insufficient funds for the transaction. Please add more native token to your account.');
+      if (ethBalance.lt(transactionCost.add(amountInWei))) {
+        Alert.alert('Error', 'Insufficient ETH for transaction fees. Please add more ETH to your account.');
         return;
       }
-
+  
       console.log('Sending swap transaction...');
       const swapTx = await signer.sendTransaction({
         to: quote.tx.to,
@@ -249,22 +270,35 @@ const SwapPage = ({ navigation, route }) => {
       console.log('Swap transaction confirmed');
       setIsSwapping(false); // Stop swapping animation
       setIsSwapComplete(true); // Start swapped animation
-
+  
       setTimeout(() => {
         setIsSwapComplete(false); // Stop swapped animation
         Alert.alert('Success', `Swapped ${amount} ${fromToken.symbol} to ${toToken.symbol} successfully!`);
         navigation.navigate('MainPage');
       }, 2000); // Show swapped animation for 2 seconds
-
+  
     } catch (error) {
       console.error('Error performing swap:', error);
-      if (error.code === ethers.errors.CALL_EXCEPTION) {
+  
+      // Handle specific error cases
+      if (error.code === ethers.errors.INSUFFICIENT_FUNDS) {
+        Alert.alert('Error', 'Insufficient token balance to perform the swap.');
+      } else if (error.code === ethers.errors.UNPREDICTABLE_GAS_LIMIT || error.message.includes('gas required exceeds')) {
+        Alert.alert('Error', 'Transaction failed due to unpredictable gas fees. Consider changing the token.');
+      } else if (error.message.includes('fractional')) {
+        Alert.alert('Error', 'Amount too low. Please increase the amount.');
+      }else if (error.message.includes('Internal')) {
+        Alert.alert('Error', 'Something went wrong. Please check if your token is available on the current chain.');
+      }else if (error.code === ethers.errors.CALL_EXCEPTION) {
         console.error('Transaction failed with CALL_EXCEPTION. Please check the contract call and parameters.');
+      } else {
+        Alert.alert('Error', `Failed to perform swap: ${error.message}`);
       }
+      
       setIsSwapping(false);
-      Alert.alert('Something went wrong  , try again or chnage the token');
     }
   };
+  
 
   const generateFallbackIcon = name => {
     const firstLetter = name.charAt(0).toUpperCase();

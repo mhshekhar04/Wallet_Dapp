@@ -247,8 +247,8 @@ export default function SetupScreen() {
               color={isChecked ? '#FEBF32' : undefined}
             />
             <Text style={styles.checkboxText}>
-              I understand that CC Wallet cannot recover this password for me.{' '}
-              <Text style={styles.learnMore}>Learn more</Text>
+              I understand that <Text style={styles.learnMore}>CC Wallet</Text> cannot recover this password for me.{' '}
+              {/* <Text style={styles.learnMore}>Learn more</Text> */}
             </Text>
           </View>
           <TouchableOpacity

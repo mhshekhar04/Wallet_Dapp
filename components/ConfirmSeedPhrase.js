@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
+  ActivityIndicator,
 } from 'react-native';
 import {ethers} from 'ethers';
 import SecureStorage from 'rn-secure-storage';
@@ -18,8 +19,7 @@ const ConfirmSeedPhrase = ({navigation, route}) => {
   const [inputPhrase, setInputPhrase] = useState(new Array(12).fill(''));
   const [activeStep, setActiveStep] = useState(1);
   const [randomPosition, setRandomPosition] = useState(generateRandomNumber());
-  // const [loading, setLoading] = useState(false); // Loader state
-
+  const [loading, setLoading] = useState(false);
 
   // Function to generate a random number between 0 and 11 (inclusive)
   function generateRandomNumber() {
@@ -33,10 +33,14 @@ const ConfirmSeedPhrase = ({navigation, route}) => {
     setInputPhrase(newInputPhrase);
   };
 
-  // Function to handle navigation to next step
+  // Function to handle navigation to the next step
   const handleNext = async () => {
     // Check if the entered phrase matches the seed phrase at the current random position
-    if (inputPhrase[randomPosition] === seedPhrase[randomPosition].toLowerCase()) {
+    if (
+      inputPhrase[randomPosition] === seedPhrase[randomPosition].toLowerCase()
+    ) {
+      setLoading(true); // Show loader when the button is clicked
+
       // If correct, proceed to the next step or navigate to success page if all steps are completed
       if (activeStep === 3) {
         try {
@@ -44,7 +48,7 @@ const ConfirmSeedPhrase = ({navigation, route}) => {
           const isValid = ethers.utils.isValidMnemonic(mnemonic);
           if (isValid) {
             const rootNode = ethers.utils.HDNode.fromMnemonic(mnemonic);
-  
+
             // Fetch all 25 accounts from the seed phrase and store them locally
             const newAccounts = [];
             for (let i = 0; i < 25; i++) {
@@ -54,24 +58,35 @@ const ConfirmSeedPhrase = ({navigation, route}) => {
                 address: childNode.address,
                 encryptedPrivateKey: CryptoJS.AES.encrypt(
                   childNode.privateKey,
-                  config.privateKeyEncryptionString
+                  config.privateKeyEncryptionString,
                 ).toString(),
               };
               newAccounts.push(newAccount);
             }
             const updatedAccounts = [...accounts, ...newAccounts];
             setAccounts(updatedAccounts);
-            await SecureStorage.setItem('accounts', JSON.stringify(updatedAccounts));
+            await SecureStorage.setItem(
+              'accounts',
+              JSON.stringify(updatedAccounts),
+            );
             await SecureStorage.setItem('seedPhraseVerified', 'true');
-            
-        
+
+            setLoading(false); // Hide loader after successful navigation
             navigation.replace('SuccessSeedPhrase');
           } else {
-            Alert.alert('Verification failed', 'Seed phrase is not verified by ethers.js');
+            setLoading(false); // Hide loader if mnemonic is not valid
+            Alert.alert(
+              'Verification failed',
+              'Seed phrase is not verified',
+            );
           }
         } catch (error) {
+          setLoading(false); // Hide loader if an error occurs
           console.error('Error verifying seed phrase:', error);
-          Alert.alert('Verification Failed', 'An error occurred while verifying seed phrase');
+          Alert.alert(
+            'Verification Failed',
+            'An error occurred while verifying seed phrase',
+          );
         }
       } else {
         // Otherwise, move to the next random position and reset input
@@ -80,10 +95,13 @@ const ConfirmSeedPhrase = ({navigation, route}) => {
         setActiveStep(activeStep + 1);
       }
     } else {
-      Alert.alert('Verification Failed', 'The entered phrase does not match the seed phrase.');
+      Alert.alert(
+        'Verification Failed',
+        'The entered phrase does not match the seed phrase.',
+      );
     }
   };
-  
+
   return (
     <View style={styles.container}>
       <View style={styles.rectanglesContainer}>
@@ -147,9 +165,19 @@ const ConfirmSeedPhrase = ({navigation, route}) => {
             inputPhrase[randomPosition] === seedPhrase[randomPosition]
           )
         }>
-        <Text style={styles.buttonText}>
-          {activeStep === 3 ? 'Next' : 'Continue'}
-        </Text>
+        {activeStep === 3 ? (
+          <View style={styles.loaderContainer}>
+            <Text style={styles.buttonText}>Next</Text>
+            {loading && (
+              <View style={styles.loaderContainer}>
+                <ActivityIndicator size="small" color="#FEBF32" />
+                {/* <Text style={styles.loadingText}>Please wait</Text> */}
+              </View>
+            )}
+          </View>
+        ) : (
+          <Text style={styles.buttonText}>Continue</Text>
+        )}
       </TouchableOpacity>
     </View>
   );
@@ -168,6 +196,14 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 16,
     marginBottom: 16,
+  },
+  loadingText: {
+    color: '#FEBF32',
+  },
+  loaderContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   rectangle: {
     flex: 1,

@@ -243,13 +243,14 @@ export default function SetupScreen() {
           </View>
           <View style={styles.checkboxContainer}>
             <CheckBox
+              style={styles.checkboxtick}
               value={isChecked}
               onValueChange={setChecked}
               color={isChecked ? '#FEBF32' : undefined}
             />
             <Text style={styles.checkboxText}>
-              I understand that CC Wallet cannot recover this password for me.{' '}
-              <Text style={styles.learnMore}>Learn more</Text>
+              I understand that <Text style={styles.learnMore}>CC Wallet</Text> cannot recover this password for me.{' '}
+              {/* <Text style={styles.learnMore}>Learn more</Text> */}
             </Text>
           </View>
           <TouchableOpacity
@@ -381,6 +382,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     marginVertical: 20,
+    
+  },
+  checkboxtick:{
+     color:'#FFF'
   },
   checkboxText: {
     flex: 1,

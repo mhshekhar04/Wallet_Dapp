@@ -14,38 +14,11 @@ import Svg, { Defs, LinearGradient, Stop, Text as SvgText } from 'react-native-s
 export default function WalletSetup() {
   const navigation = useNavigation();
 
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     const checkCredentials = async () => {
-  //       const password = await RNSecureStorage.getItem('newPassword');
-  //       const seed = await RNSecureStorage.getItem('seedPhraseVerified');
-  //       const fingerprint = await RNSecureStorage.getItem('userFingerprint');
-  //       const pin = await RNSecureStorage.getItem('userPin');
-        
-  //       console.log('Wallet Setup Password', password);
-  //       console.log('Seed Phrase', seed);
-  //       console.log('Fingerprint', fingerprint);
-  //       console.log('Pin', pin);
-  
-  //       if (password && seed ) {
-      
-  //           navigation.replace('Lock');
-  //         } else {
-  //           navigation.replace('MainPage');
-  //         }
-        
-  //     };
-  //     checkCredentials();
-  //   }, []),
-  // );
-
-
   useFocusEffect(
     useCallback(() => {
       const checkCredentials = async () => {
         try {
           const password = await RNSecureStorage.getItem('newPassword');
-<<<<<<< Updated upstream
           const seed = await RNSecureStorage.getItem('seedPhraseVerified');
           
           // Logging for debugging
@@ -95,45 +68,6 @@ export default function WalletSetup() {
 
 
   
-=======
-          console.log('Wallet Setup Password', password);
-          const seed = await RNSecureStorage.getItem('seedPhraseVerified');
-          console.log('Seed Phrase', seed);
-
-          // Optional credentials
-          let fingerprint, pin;
-          try {
-            fingerprint = await RNSecureStorage.getItem('userFingerprint');
-            console.log('Fingerprint', fingerprint);
-          } catch (e) {
-            console.log('Fingerprint not found');
-          }
-          try {
-            pin = await RNSecureStorage.getItem('userPin');
-            console.log('Pin', pin);
-          } catch (e) {
-            console.log('Pin not found');
-          }
-
-          if (password && seed) {
-            if (pin || fingerprint) {
-              navigation.replace('Lock');
-            } else {
-              navigation.replace('MainPage');
-            }
-          } else {
-            navigation.replace('WalletSetup');
-          }
-        } catch (error) {
-          console.error('Error checking credentials:', error);
-          // Handle error if needed
-        }
-      };
-
-      checkCredentials();
-    }, [navigation])
-  );
->>>>>>> Stashed changes
   const handleDeleteSeedPhrase = async () => {
     try {
       await RNSecureStorage.setItem('seedPhrase', null);
@@ -400,8 +334,8 @@ export default function WalletSetup() {
         <Text style={styles.buttonYellowText}>Create a New Wallet</Text>
       </TouchableOpacity>
 
-      
-      {/* <TouchableOpacity
+      {/* 
+      <TouchableOpacity
         style={styles.buttonGray}
         onPress={handleDeleteAllTokens}>
         <Text style={styles.deleteButtonText}>Delete All Tokens</Text>
@@ -468,8 +402,8 @@ export default function WalletSetup() {
         style={styles.deleteButton}
         onPress={handleGetAllSeedPhrases}>
         <Text style={styles.deleteButtonText}>Get All Seed Phrases</Text>
-      </TouchableOpacity>  */}
-     
+      </TouchableOpacity> 
+      */}
 
       <Text style={styles.para}>Secure Seamless Trading</Text>
     </View>

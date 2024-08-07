@@ -12,12 +12,14 @@ import {
 } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-const Navigation = ({selectedAccount,selectedNetwork}) => {
+const Navigation = ({selectedAccount, selectedNetwork}) => {
   const route = useRoute();
   //   const {selectedAccount} = route.params || {};
   const navigation = useNavigation();
 
-//   console.log('Navigation Selected Account', selectedAccount);
+  // console.log('Navigation Selected Account', selectedAccount);
+  // console.log(' Selected Network NP', selectedNetwork);
+
   return (
     <View style={styles.bottomNav}>
       <TouchableOpacity
@@ -30,7 +32,7 @@ const Navigation = ({selectedAccount,selectedNetwork}) => {
         style={styles.navButton}
         onPress={() => {
           if (route.name !== 'Profile') {
-            navigation.navigate('Profile', {selectedAccount});
+            navigation.navigate('Profile', {selectedAccount,selectedNetwork});
           }
         }}>
         <FontAwesome name="user" size={24} color="#FEBF32" />

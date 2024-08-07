@@ -29,7 +29,7 @@ export default function TokenAmount({ route, navigation }) {
   const [fetchingGasFee, setFetchingGasFee] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const tickOpacity = useState(new Animated.Value(0))[0];
-  const adminWalletAddress = '0x41956fdADAe085BCABF9a1e085EE5c246Eb82b44';
+ // const adminWalletAddress = '0x41956fdADAe085BCABF9a1e085EE5c246Eb82b44';
 
   const decryptPrivateKey = (encryptedPrivateKey) => {
     const bytes = CryptoJS.AES.decrypt(encryptedPrivateKey, config.privateKeyEncryptionString);
@@ -107,24 +107,26 @@ export default function TokenAmount({ route, navigation }) {
       const gasFees = gasPrice.mul(gasLimit);
       const amountInWei = ethers.utils.parseEther(amount);
       // Calculate recipientAmount as 99.75% and adminAmount as 0.25%
-      const recipientAmount = amountInWei.mul(9975).div(10000); // 99.75%
-      const adminAmount = amountInWei.sub(recipientAmount); // 0.25%
+      // const recipientAmount = amountInWei.mul(9975).div(10000); // 99.75%
+      // const adminAmount = amountInWei.sub(recipientAmount); // 0.25%
+      const recipientAmount = amountInWei ;
       const tx1 = {
         to: toAccount.address,
         value: recipientAmount,
         gasPrice: gasPrice,
         gasLimit: gasLimit,
       };
-      const tx2 = {
-        to: adminWalletAddress,
-        value: adminAmount,
-        gasPrice: gasPrice,
-        gasLimit: gasLimit,
-      };
+      // const tx2 = {
+      //   to: adminWalletAddress,
+      //  // value: adminAmount,
+      //   value: recipientAmount,
+      //   gasPrice: gasPrice,
+      //   gasLimit: gasLimit,
+      // };
       const txResponse1 = await wallet.sendTransaction(tx1);
-      const txResponse2 = await wallet.sendTransaction(tx2);
+     // const txResponse2 = await wallet.sendTransaction(tx2);
       await txResponse1.wait();
-      await txResponse2.wait();
+     // await txResponse2.wait();
       // Show success animation
       setShowSuccess(true);
       playNotificationSound();

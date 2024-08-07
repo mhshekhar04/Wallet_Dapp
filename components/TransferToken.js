@@ -95,7 +95,7 @@ export default function TransferToken({ route, navigation }) {
       const wallet = new ethers.Wallet(decryptedPrivateKey, provider);
       const tokenContract = new ethers.Contract(selectedToken.tokenAddress, selectedToken.abi, wallet);
       const tokenWithSigner = tokenContract.connect(wallet);
-      const totalGasCost = await txGasEstimation(tokenWithSigner, toAccount.address, amount, adminWalletAddress, provider);
+      const totalGasCost = await txGasEstimation(tokenWithSigner, toAccount.address, amount,provider);
       setGasFee(ethers.utils.formatEther(totalGasCost));
     } catch (error) {
 
@@ -103,14 +103,16 @@ export default function TransferToken({ route, navigation }) {
     }
   };
 
-  const txGasEstimation = async (tokenWithSigner, to, amount, adminWalletAddress, provider) => {
+  const txGasEstimation = async (tokenWithSigner, to, amount, provider) => {
     const decimals = await tokenWithSigner.decimals();
     const amountInWei = ethers.utils.parseUnits(amount.toString(), decimals);
-    const recipientAmount = amountInWei.mul(9975).div(10000); // 99.75%
-    const adminAmount = amountInWei.sub(recipientAmount); // 0.25%
+    const recipientAmount = amountInWei
+    //const recipientAmount = amountInWei.mul(9975).div(10000); // 99.75%
+    //const adminAmount = amountInWei.sub(recipientAmount); // 0.25%
     const gasEstimate1 = await tokenWithSigner.estimateGas.transfer(to, recipientAmount);
-    const gasEstimate2 = await tokenWithSigner.estimateGas.transfer(adminWalletAddress, adminAmount);
-    const totalGasEstimate = gasEstimate1.add(gasEstimate2);
+   // const gasEstimate2 = await tokenWithSigner.estimateGas.transfer(adminWalletAddress, adminAmount);
+    //const totalGasEstimate = gasEstimate1.add(gasEstimate2);
+    const totalGasEstimate = gasEstimate1
     const gasPrice = await provider.getGasPrice();
     const totalGasCost = totalGasEstimate.mul(gasPrice);
     return totalGasCost;
@@ -133,6 +135,7 @@ export default function TransferToken({ route, navigation }) {
       // Convert amount to the token's smallest unit using the fetched decimals
       const amountInWei = ethers.utils.parseUnits(amount.toString(), decimals);
       const balanceInWei = ethers.utils.parseUnits(balance, decimals);
+      console.log("token decimal",decimals)
       if (gasFee && ethers.utils.parseEther(gasFee.toString()).gt(balanceInWei)) {
         Alert.alert(
           "Insufficient Balance",
@@ -152,14 +155,15 @@ export default function TransferToken({ route, navigation }) {
       }
       const tx1 = await tokenWithSigner.transfer(
         toAccount.address,
-        amountInWei.mul(9975).div(10000) // 99.75% of the amount
+      //  amountInWei.mul(9975).div(10000) // 99.75% of the amount
+      amountInWei
       );
-      const tx2 = await tokenWithSigner.transfer(
-        adminWalletAddress,
-        amountInWei.sub(amountInWei.mul(9975).div(10000)) // 0.25% of the amount
-      );
+      // const tx2 = await tokenWithSigner.transfer(
+      //   adminWalletAddress,
+      //   amountInWei.sub(amountInWei.mul(9975).div(10000)) // 0.25% of the amount
+      // );
       await tx1.wait();
-      await tx2.wait();
+    //  await tx2.wait();
       // Show success animation
       setShowSuccess(true);
       playNotificationSound();
